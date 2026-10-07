@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>3.2.2 误差修正模型（VEC） · 《金融学实证论文写作》配套资源</title>
+<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <span class="crumb">宏观金融实证 / 3.2.2 误差修正模型（VEC）</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<span class="kicker">第 3 章 · 宏观金融实证研究方法 · 模块 4/9</span>
+<h1 class="doc"><span class="num-badge">3.2.2</span>误差修正模型（VEC）</h1>
+<p class="tagline">长期均衡之上的短期调整：误差修正项与调整系数</p>
+
+<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<p style="font-size:.92rem">协整关系刻画变量之间的长期均衡，误差修正模型（VEC）在其之上补充短期动态：把协整残差（误差修正项）以滞后一期进入差分方程，其系数衡量短期偏离向长期均衡回调的速度。本节以书中 Bauer 和 Rudebusch（2020）国债利率系统的 VEC 估计为例演示操作与结果阅读。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>VEC 的估计操作：VAR 类型选 Vector Error Correction</li><li>结果的两块：协整方程（长期）与调整系数（短期）</li><li>误差修正项系数的经济含义</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">yields.xls（书中 VEC 示例数据）</div><div class="fd">与 3.2.1 相同的国债利率数据（Bauer 和 Rudebusch 2020）：书中 VEC 使用 3 个月、半年、1 年、5 年、10 年期五个期限</div><table class="vars"><tr><td>ys / yss / y1 / y5 / y10</td><td>书中在 Endogenous variables 处输入的五个序列</td></table><a class="dl-btn" href="../../assets/data/yields.xls" download>⬇ yields.xls</a></div><div class="data-card"><div class="fn">johansen test.wf1</div><div class="fd">书中 VEC 的 EViews 工作文件（含 VEC 对象与 CointEq1，对应图 3.2.5）</div><table class="vars"><tr><td>Y10 / YSS / VEC / CointEq1</td><td>收益率序列、VEC 估计与误差修正项</td></table><a class="dl-btn" href="../../assets/data/johansen test.wf1" download>⬇ johansen test.wf1</a></div>
+
+<h2 class="sec">操作步骤</h2><div class="stepgrp"><div class="stepgrp-t">VEC 估计（书中示例：国债利率）</div><ol><li>先完成 Johansen 检验，确定协整秩（书中 VEC 报告一个协整方程 CointEq1）</li><li>Quick – Estimate VAR，VAR Type 选择 Vector Error Correction</li><li>书中在 Endogenous variables 处输入 ys、yss、y1、y5 和 y10（图 3.2.5 的设定）</li><li>估计结果分两部分：上方为协整方程（长期均衡关系），下方为各差分方程中的误差修正项系数（调整系数）与短期滞后项</li><li>View – Impulse Response 与 View – Variance Decomposition 查看 VEC 的脉冲响应与方差分解</li></ol></div><p class="res-note">以上步骤依据书中正文与 EViews 菜单整理；对应的 EViews 工作文件见上方数据卡。</p>
+
+<h2 class="sec">结果与图示</h2>
+<h3 class="sub">VEC 估计结果（国债利率系统，书中示例数据）</h3><p class='res-note'>长期均衡关系（协整向量）：y0.25（3 个月）：1.0、y0.5（半年）：-0.3031、y1：-0.8893、y5：0.5257、y10：-0.2965。N = 184。</p><table class='res'><tr><th>方程</th><th>误差修正项系数（调整系数）</th></tr><tr><td>Δ y0.25（3 个月） 方程</td><td>-0.5914</td></tr><tr><td>Δ y0.5（半年） 方程</td><td>-0.1487</td></tr><tr><td>Δ y1 方程</td><td>0.3</td></tr><tr><td>Δ y5 方程</td><td>0.515</td></tr><tr><td>Δ y10 方程</td><td>0.5643</td></tr></table><p class='res-note'>差分滞后 1 期、常数约束于协整空间，与书中设定一致；协整秩取 1，与书中 VEC 示例（图 3.2.5 报告一个协整方程 CointEq1）对应。按上一表 5% 临界值，两个统计量均支持更高的秩，实证中协整秩的确定还应结合经济解释与设定敏感性。误差修正项系数（调整系数）为负表示短期偏离向长期均衡回调；书中 CointEq1 每年调节约 59.26% 的短期利率偏移，与本表第一个方程的系数（-0.5914）几乎一致。</p>
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>误差修正项系数怎么解读？</summary><div class="a">系数衡量上一期偏离长期均衡时本期调整的比例：为负且显著说明偏离会被回调，绝对值越大调整越快；不显著说明短期不向均衡调整，协整关系的解释力弱。若为正，说明偏离进一步扩大，通常提示协整设定或样本处理（如季节调整）需要检查。</div></details><details class="qa"><summary>VEC 和 VAR 是什么关系？</summary><div class="a">VEC 是带协整约束的差分 VAR：变量非平稳但存在协整时，直接用差分 VAR 会损失长期信息，VEC 通过误差修正项把长期均衡与短期动态结合起来，是协整系统的标准表示（Engle 和 Granger 表示定理）。</div></details><details class="qa"><summary>为什么先做 Johansen 检验？</summary><div class="a">VEC 需要事先给定协整秩：秩为 0 时不存在协整，应使用差分 VAR；秩等于变量个数时系统平稳，可直接用水平 VAR。协整秩由 Johansen 检验确定。</div></details><details class="qa"><summary>书中的国内价格传导研究是怎么应用的？</summary><div class="a">书中图 3.2.6 引用的研究对我国上中下游价格系统估计 VEC，考察上下游价格之间的长期传导关系与短期调整速度，是 VEC 在国内研究中的典型应用。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Engle, R. F. &amp; Granger, C. W. J.（1987）：</span><a class="rt" href="https://doi.org/10.2307/1913236" target="_blank" rel="noopener">Co-Integration and Error Correction: Representation, Estimation, and Testing</a>，<span class="rv">Econometrica</span></li></ul>
+<div class='pn'><a href="../3-2-1/index.html"><div class="dir">← 上一节</div><div class="t">3.2.1 协整分析：EG 两步法与 Johansen 检验</div></a><a class="next" href="../3-3-1/index.html"><div class="dir">下一节 →</div><div class="t">3.3.1 标准 VAR：定阶、脉冲响应与方差分解</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

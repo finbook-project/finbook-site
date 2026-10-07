@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>4.2.4 多因子模型比较：α 检验与 GRS 检验 · 《金融学实证论文写作》配套资源</title>
+<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <span class="crumb">资产定价实证 / 4.2.4 多因子模型比较：α 检验与 GRS 检验</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<span class="kicker">第 4 章 · 资产定价实证研究方法 · 模块 3/7</span>
+<h1 class="doc"><span class="num-badge">4.2.4</span>多因子模型比较：α 检验与 GRS 检验</h1>
+<p class="tagline">新因子是否冗余：以旧模型解释新因子的两把尺子</p>
+
+<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<p style="font-size:.92rem">因子模型不断增多，判断一个新因子是否带来增量信息有两条标准路径：α 检验把新因子作为被解释变量、用旧模型的因子回归，截距（α）显著说明旧模型解释不了；GRS 检验进一步考虑因子间的相关性，对新因子组合的联合 α 做整体检验。本节以 Fama-French 五因子相对三因子的比较为书内示例，数据为 2000-2019 年月度的中国五因子序列。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>α 检验：新因子对旧因子回归，看截距与 |t|&gt;3 的经验标准</li><li>GRS 检验：grstest2 的语法与统计量含义</li><li>esttab 汇总输出</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">五因子数据.dta</div><div class="fd">书中 α 检验与 GRS 检验的数据：2000 年 1 月-2019 年 12 月共 240 个月的 MKT、SMB、HML、RMW、CMA 五个因子（源于 CSMAR 数据库）</div><table class="vars"><tr><td>MKT / SMB / HML</td><td>三因子模型的因子（旧模型）</td><tr><td>RMW / CMA</td><td>五因子新增的盈利与投资因子（被检验的新因子）</td></table><a class="dl-btn" href="../../assets/data/五因子数据.dta" download>⬇ 五因子数据.dta</a></div>
+
+<h2 class="sec">代码</h2>
+<div class="block"><div class="block-h"><span class="bno">4.2.4·1</span>α 检验：新因子能否被旧模型解释<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b1" data-i="0" data-raw="use 五因子数据.dta, clear  [打开数据]"><span class="no">1</span><code><span class="k">use</span> 五因子数据.dta, <span class="k">clear</span> <span class="c">[打开数据]</span></code></div><div class="ln has-note" data-b="b1" data-i="1" data-raw="reg RMW MKT SMB HML , robust  [Fama-French五因子模型新提出的RMW因子作为回归的被解释变量，以Fama-French三因子模型作为解释变量进行α检验]"><span class="no">2</span><code><span class="k">reg</span> RMW MKT SMB HML , <span class="o">robust</span> <span class="c">[Fama-French五因子模型新提出的RMW因子作为回归的被解释变量，以Fama-French三因子模型作为解释变量进行α检验]</span></code></div><div class="ln has-note" data-b="b1" data-i="2" data-raw="est store r2_1  [储存回归结果]"><span class="no">3</span><code><span class="k">est</span> <span class="k">store</span> r2_1 <span class="c">[储存回归结果]</span></code></div><div class="ln has-note" data-b="b1" data-i="3" data-raw="reg CMA MKT SMB HML , robust  [Fama-French五因子模型新提出的CMA因子作为回归的被解释变量，以Fama-French三因子模型作为解释变量进行α检验]"><span class="no">4</span><code><span class="k">reg</span> CMA MKT SMB HML , <span class="o">robust</span> <span class="c">[Fama-French五因子模型新提出的CMA因子作为回归的被解释变量，以Fama-French三因子模型作为解释变量进行α检验]</span></code></div><div class="ln has-note" data-b="b1" data-i="4" data-raw="est store r2_2  [储存回归结果]"><span class="no">5</span><code><span class="k">est</span> <span class="k">store</span> r2_2 <span class="c">[储存回归结果]</span></code></div><div class="ln has-note" data-b="b1" data-i="5" data-raw="esttab r2_1 r2_2, nogap replace star(* 0.1 ** 0.05 *** 0.01) b(3) t(2) ar2 order( _cons MKT SMB HML)  [报告回归结果]"><span class="no">6</span><code><span class="k">esttab</span> r2_1 r2_2, nogap <span class="o">replace</span> <span class="o">star</span>(<span class="x">*</span> 0.1 <span class="x">*</span><span class="x">*</span> 0.05 <span class="x">*</span><span class="x">*</span><span class="x">*</span> 0.01) <span class="o">b</span>(3) <span class="o">t</span>(2) ar2 order( _cons MKT SMB HML) <span class="c">[报告回归结果]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">α 检验的单变量版本与 GRS 的区别：前者只看单个新因子回归的截距，后者把多个新因子作为组合整体检验，并显式处理因子相关性与波动性的影响；GRS 是多因子模型比较的标准检验（Gibbons、Ross 和 Shanken 1989）。|t|&gt;3 的经验标准来自对因子挖掘中多重检验问题的防范。</div></details></div><div class="block"><div class="block-h"><span class="bno">4.2.4·2</span>GRS 检验<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b2" data-i="0" data-raw="use 五因子数据.dta, clear  [打开数据]"><span class="no">1</span><code><span class="k">use</span> 五因子数据.dta, <span class="k">clear</span> <span class="c">[打开数据]</span></code></div><div class="ln has-note" data-b="b2" data-i="1" data-raw="grstest2 RMW CMA, flist( MKT SMB HML) alphas  [回归并进行GRS检验]"><span class="no">2</span><code>grstest2 RMW CMA, flist( MKT SMB HML) alphas <span class="c">[回归并进行GRS检验]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">同一数据上，RMW 与 CMA 对三因子回归的 α 均接近显著，GRS F 统计量远大于临界值——A 股样本中三因子模型无法完全解释五因子的新增部分，与书中示例的结论方向一致（对照书图 4.2.4、图 4.2.5）。</div></details></div>
+
+<h2 class="sec">结果与图示</h2>
+<h3 class="sub">α 检验与 GRS 统计量（五因子数据）</h3><table class='res'><tr><th>回归</th><th>变量</th><th>系数</th><th>t 值</th><th></th></tr><tr><td rowspan='4'>RMW 对 MKT/SMB/HML 回归</td><td>α（常数项）</td><td>-0.571</td><td>-3.95</td><td><span class='star'>***</span></td></tr><tr><td>MKT</td><td>0.0871</td><td>3.56</td><td></td></tr><tr><td>SMB</td><td>0.6489</td><td>11.5</td><td></td></tr><tr><td>HML</td><td>0.3612</td><td>5.96</td><td></td></tr><tr><td rowspan='4'>CMA 对 MKT/SMB/HML 回归</td><td>α（常数项）</td><td>-0.2634</td><td>-2.41</td><td><span class='star'>**</span></td></tr><tr><td>MKT</td><td>-0.0322</td><td>-1.7</td><td></td></tr><tr><td>SMB</td><td>0.2728</td><td>6.1</td><td></td></tr><tr><td>HML</td><td>0.4448</td><td>10.25</td><td></td></tr></table><h3 class='sub'>GRS 检验</h3><div class='big-stat'><div class='stat'><div class='l'>GRS F 统计量（H0：RMW、CMA 可被三因子解释）</div><div class='v'>6.695<span class='star'>***</span></div><div class='l'>F(2, 235)，p = 0.0015</div></div></div><p class='res-note'>T = 240。α 检验采用 OLS 稳健标准误（robust）；GRS 统计量按 Gibbons-Ross-Shanken (1989) 公式计算（检验 RMW、CMA 对 MKT/SMB/HML 回归的联合 α=0），原假设为新因子可被旧模型解释。</p>
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>为什么用 |t| &gt; 3 而不是 1.96 作标准？</summary><div class="a">月度因子收益的检验中，大量候选因子意味着多重检验问题：5% 显著性水平下试的因子够多总会碰上显著的。把门槛提高到 |t| &gt; 3 可以过滤掉大部分伪发现，这是 Harvey 等提出的经验法则，书中也采用这一标准。</div></details><details class="qa"><summary>GRS 统计量怎么读？</summary><div class="a">GRS 是一个 F 分布统计量，原假设为被检验资产（新因子）的联合 α 为零，即旧模型可以完全定价它们。p 值小于显著性水平时拒绝原假设，说明新因子含有旧模型未涵盖的信息。F 值与 p 值见上方结果表。</div></details><details class="qa"><summary>α 不显著就说明新因子没用吗？</summary><div class="a">α 不显著只说明它能被旧模型线性表出（冗余）。一种可能是新因子确实无增量；另一种可能是两者高度共线、检验功效不足。习惯做法是同时报告 α 检验、GRS 检验以及两模型样本外定价误差的比较。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Fama, E. F. &amp; French, K. R.（2015）：</span><a class="rt" href="https://doi.org/10.1016/j.jfineco.2014.10.010" target="_blank" rel="noopener">A Five-Factor Asset Pricing Model</a>，<span class="rv">Journal of Financial Economics</span></li><li><span class="rw">Hou, K., Xue, C. &amp; Zhang, L.（2015）：</span><a class="rt" href="https://doi.org/10.1093/rfs/hhu068" target="_blank" rel="noopener">Digesting Anomalies: An Investment Approach</a>，<span class="rv">The Review of Financial Studies</span></li><li><span class="rw">Stambaugh, R. F. &amp; Yuan, Y.（2017）：</span><a class="rt" href="https://doi.org/10.1093/rfs/hhw107" target="_blank" rel="noopener">Mispricing Factors</a>，<span class="rv">The Review of Financial Studies</span></li></ul>
+<div class='pn'><a href="../4-2-3/index.html"><div class="dir">← 上一节</div><div class="t">4.2.3 多因子模型检验：Fama-MacBeth 回归</div></a><a class="next" href="../4-3-2/index.html"><div class="dir">下一节 →</div><div class="t">4.3.2 Python 安装与 Jupyter 设置</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{"b1":["打开五因子数据。","α 检验第一步：以五因子模型新提出的 RMW 因子作为被解释变量，用三因子模型的 MKT、SMB、HML 作为解释变量回归（robust 为稳健标准误）。若三因子能完全解释 RMW，截距应不显著。","储存第一个回归结果。","α 检验第二步：对 CMA 因子做同样的回归。","储存第二个回归结果。","汇总报告两个回归：nogap 去掉表间隔，star 定义星号水平，b(3) t(2) 设定系数与 t 值的小数位，ar2 报告调整 R²，order 指定变量顺序。判断标准为 |t| > 3.0（对月度因子收益的经验要求，比通常的 1.96 更严格）。"],"b2":["打开五因子数据。","GRS 检验：grstest2 对 RMW、CMA 做联合检验，flist 指定解释因子（MKT、SMB、HML），alphas 选项报告各资产的实际 α 与模型隐含 α。GRS 统计量检验新因子组合的联合 α 是否为零，拒绝原假设说明旧模型无法完全解释新因子。"]}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

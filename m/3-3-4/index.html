@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>3.3.4 因子增强 VAR（FA-VAR） · 《金融学实证论文写作》配套资源</title>
+<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <span class="crumb">宏观金融实证 / 3.3.4 因子增强 VAR（FA-VAR）</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<span class="kicker">第 3 章 · 宏观金融实证研究方法 · 模块 8/9</span>
+<h1 class="doc"><span class="num-badge">3.3.4</span>因子增强 VAR（FA-VAR）</h1>
+<p class="tagline">大数据提取共同因子：主成分合成与还原（书中 EViews 命令）</p>
+
+<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<p style="font-size:.92rem">VAR 能容纳的变量数受样本长度限制，而宏观金融研究往往需要利用大量信息。因子增强 VAR（FA-VAR）从大量宏观序列中提取少数共同因子，把因子与关键观测变量一起纳入 VAR。本节按书中的 FAVAR 实例演示：对变量分组做主成分、按方差解释比例合成共同因子、估计方程并还原不可观测因子。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>主成分的生成与按方差比例合成共同因子</li><li>FA-VAR 估计方程的设定</li><li>不可观测因子的还原：比例分解</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">favar.xls</div><div class="fd">书中表 3.3.1 的 17 个变量（中国月度宏观数据，240 个观测）：经济波动 12 个、通货膨胀 3 个、货币政策 2 个</div><table class="vars"><tr><td>经济波动（12 个）</td><td>宏观经济景气指数、消费者信心指数、工业增加值、社会消费品零售总额、进出口金额、实际有效汇率指数、公共财政支出、社会融资规模、固定资产投资完成额、股票总市值、债券总价值、期货成交量</td><tr><td>通货膨胀（3 个）</td><td>CPI、PPI、RPI</td><tr><td>货币政策（2 个）</td><td>M2、同业拆借利率</td></table><a class="dl-btn" href="../../assets/data/favar.xls" download>⬇ favar.xls</a></div><div class="data-card"><div class="fn">favar.wf1</div><div class="fd">书中 FAVAR 的 EViews 工作文件（含主成分 pc1、pc2 与 VAR 对象）</div><table class="vars"><tr><td>pc1 / pc2 / EF1 / PAI1</td><td>主成分与还原后的因子序列</td><tr><td>VAR01 / VAR02</td><td>估计的 VAR 对象</td></table><a class="dl-btn" href="../../assets/data/favar.wf1" download>⬇ favar.wf1</a></div>
+
+<h2 class="sec">代码</h2>
+<div class="block"><div class="block-h"><span class="bno">3.3.4·1</span>FA-VAR：主成分合成与估计（EViews 命令窗口）<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b1" data-i="0" data-raw="genr x=0.5504*x1+0.1619*x2+0.0872*x3+0.0605*x4 [根据主成分比例合成变量x]"><span class="no">1</span><code><span class="o">genr</span> x<span class="x">=</span>0.5504<span class="x">*</span>x1<span class="x">+</span>0.1619<span class="x">*</span>x2<span class="x">+</span>0.0872<span class="x">*</span>x3<span class="x">+</span>0.0605<span class="x">*</span>x4 <span class="c">[根据主成分比例合成变量x]</span></code></div><div class="ln has-note" data-b="b1" data-i="1" data-raw="genr f=0.5598*ef+0.1744*pai [根据主成分比例合成变量f]"><span class="no">2</span><code><span class="o">genr</span> f<span class="x">=</span>0.5598<span class="x">*</span>ef<span class="x">+</span>0.1744<span class="x">*</span>pai <span class="c">[根据主成分比例合成变量f]</span></code></div><div class="ln has-note" data-b="b1" data-i="2" data-raw="ls x f m2 r [估计方程]"><span class="no">3</span><code><span class="o">ls</span> x f m2 r <span class="c">[估计方程]</span></code></div><div class="ln has-note" data-b="b1" data-i="3" data-raw="genr f1=x+0.00000000157*m2-0.008874*r [计算不可观测变量估计值]"><span class="no">4</span><code><span class="o">genr</span> f1<span class="x">=</span>x<span class="x">+</span>0.00000000157<span class="x">*</span>m2<span class="x">-</span>0.008874<span class="x">*</span>r <span class="c">[计算不可观测变量估计值]</span></code></div><div class="ln has-note" data-b="b1" data-i="4" data-raw="genr z=ef/(0.5598*ef+0.1744*pai) [计算ef在f中所占的比例z]"><span class="no">5</span><code><span class="o">genr</span> z<span class="x">=</span>ef<span class="x">/</span>(0.5598<span class="x">*</span>ef<span class="x">+</span>0.1744<span class="x">*</span>pai) <span class="c">[计算ef在f中所占的比例z]</span></code></div><div class="ln has-note" data-b="b1" data-i="5" data-raw="genr ef1=z*f1 [得到经济波动和通货膨胀]"><span class="no">6</span><code><span class="o">genr</span> ef1<span class="x">=</span>z<span class="x">*</span>f1 <span class="c">[得到经济波动和通货膨胀]</span></code></div><div class="ln has-note" data-b="b1" data-i="6" data-raw="genr pai1=(1-z)*f1"><span class="no">7</span><code><span class="o">genr</span> pai1<span class="x">=</span>(1<span class="x">-</span>z)<span class="x">*</span>f1</code></div></div><details class="deep"><summary>深度解读</summary><div class="body">本节流程对应 Bernanke 等（2005）的两步法：第一步从大数据集中提取主成分，作为不可观测共同因子的代理；第二步估计 VAR 之后，把因子还原为可观测变量的线性组合，从而对脉冲响应给出经济解释。命令中的 x1、x2 等主成分序列需先由 EViews 的主成分功能生成：把变量组成 Group 后选择 View – Principal Components，并通过 Proc 保存主成分得分。命令逐行输入 EViews 命令窗口执行即可。</div></details></div>
+
+<h2 class="sec">结果与图示</h2>
+<h3 class="sub">FAVAR 数据的主成分分析（17 个宏观变量）</h3><p class='res-note'>样本：209 个月度观测 × 17 个宏观变量。</p><table class='res'><tr><th>主成分</th><th>方差解释比例</th><th>累计比例</th></tr><tr><td>PC1</td><td>55.04%</td><td>55.04%</td></tr><tr><td>PC2</td><td>16.19%</td><td>71.23%</td></tr><tr><td>PC3</td><td>8.72%</td><td>79.95%</td></tr><tr><td>PC4</td><td>6.05%</td><td>86.00%</td></tr><tr><td>PC5</td><td>3.74%</td><td>89.74%</td></tr></table><p class='res-note'>第一主成分载荷（按绝对值排序的前六项）：cs（0.3209）、m2（0.3208）、b（0.3141）、st（0.3089）、s（0.3083）、nx（0.3049）。</p><p class='res-note'>对书中表 3.3.1 的 17 个宏观变量标准化后做主成分分解。书中按两步主成分法合成因子：f 的两个成分比例分别为 55.98% 与 17.44%，x 的第一成分比例为 0.5504，均与本表数量级一致（书中分组与本表全样本口径略有差异）；载荷符号仅表示方向。</p>
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>FA-VAR 与普通 VAR 的区别是什么？</summary><div class="a">普通 VAR 只能放少数变量，信息集有限；FA-VAR 用主成分从几十上百个序列中提取共同因子，与关键观测变量（如政策利率）一起建模，既保留了大数据的信息，又控制了参数规模，缓解了维度问题。</div></details><details class="qa"><summary>主成分得分怎么保存？</summary><div class="a">在 EViews 中把变量组成 Group，View – Principal Components 查看结果，再通过 Proc – Make Principal Components 保存得分序列（如 pc1、pc2），之后即可在命令中引用。配套工作文件 favar.wf1 中已包含保存好的主成分。</div></details><details class="qa"><summary>为什么按方差解释比例加权合成？</summary><div class="a">按各主成分的方差解释比例加权，是构造代表性共同因子的常用做法，权重反映每个成分携带信息的相对重要性。本节系数 0.5504 即第一主成分的方差解释比例（见上方表格）。</div></details><details class="qa"><summary>慢变量与快变量为什么要区分？</summary><div class="a">FAVAR 识别要求把变量分为慢变（如价格、货币总量，一个月内基本不变）与快变两类：对快变量冲击的当期响应中，慢变量不应有所反应，否则说明因子混入了当期信息。这一约束用于检验因子的信息结构是否合理。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Bernanke, B. S., Boivin, J. &amp; Eliasz, P.（2005）：</span><a class="rt" href="https://doi.org/10.1162/0033553053327452" target="_blank" rel="noopener">Measuring the Effects of Monetary Policy: A Factor-Augmented Vector Autoregressive (FAVAR) Approach</a>，<span class="rv">The Quarterly Journal of Economics</span></li></ul>
+<div class='pn'><a href="../3-3-3/index.html"><div class="dir">← 上一节</div><div class="t">3.3.3 贝叶斯 VAR（BVAR）</div></a><a class="next" href="../3-3-5/index.html"><div class="dir">下一节 →</div><div class="t">3.3.5 非线性 VAR：TVP-VAR 与 MS-VAR</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{"b1":["根据主成分比例合成变量 x：x1 至 x4 为经济波动类变量的前四个主成分，系数 0.5504、0.1619 等为各主成分的方差解释比例（见下方表格）。","根据主成分比例合成变量 f：ef 与 pai 分别为经济波动与通货膨胀的代表性成分，按方差解释比例加权合成。","以 x、f 为解释变量，连同 m2（货币）与 r（利率）估计方程（ls 为 EViews 的最小二乘估计命令），得到方程的估计结果。","由估计方程计算不可观测变量估计值 f1：把方程改写为 f 关于可观测变量 x、m2、r 的表达式后生成序列。","计算 ef 在 f 中所占的比例 z：按方差比例 0.5598 与 0.1744 的相对大小分配。","得到经济波动因子 ef1：比例 z 乘以 f1。","得到通货膨胀因子 pai1：剩余比例（1 - z）乘以 f1。"]}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

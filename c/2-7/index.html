@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>2.7 动态面板与 GMM 估计 · 《金融学实证论文写作》配套资源</title>
+<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <span class="crumb">公司金融实证 / 2.7 动态面板与 GMM 估计</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<span class="kicker">第 2 章 · 公司金融实证研究方法 · 模块 13/16</span>
+<h1 class="doc"><span class="num-badge">2.7</span>动态面板与 GMM 估计</h1>
+<p class="tagline">被解释变量滞后项进回归：Arellano-Bond 差分 GMM 的 xtabond2</p>
+
+<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<p style="font-size:.92rem">当解释变量中包含被解释变量的滞后项时（企业的当期行为往往受过去行为影响），模型为动态面板。此时 OLS 与固定效应估计均存在偏误（Nickell 偏差）。Arellano-Bond 差分 GMM 的做法是：先一阶差分消除个体固定效应，再用更深期的滞后项作为工具变量。本节用 Stata 官方的 abdata 就业面板复现 Arellano 和 Bond（1991）的经典动态就业方程。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>动态面板需要 GMM 的原因：Nickell 偏差</li><li>xtabond2 的语法：gmm() 型工具、iv() 型工具、nolevel 即差分 GMM</li><li>结果表的阅读：AR(2) 检验与 Hansen 过度识别检验</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">abdata.dta</div><div class="fd">Stata 官方示例：英国公司 1976-1984 就业面板（1031 个观测）</div><table class="vars"><tr><td>n</td><td>公司就业数量（对数）</td><tr><td>nL1 / nL2</td><td>就业的一期与二期滞后</td><tr><td>w / wL1</td><td>工资与工资滞后</td><tr><td>k / kL1 / kL2</td><td>资本存量及其滞后</td><tr><td>ys / ysL1 / ysL2</td><td>行业产出及其滞后</td></table><a class="dl-btn" href="https://www.stata-press.com/data/r18/abdata.dta" download target="_blank" rel="noopener">⬇ abdata.dta（外部链接）</a></div>
+
+<h2 class="sec">代码</h2>
+<div class="block"><div class="block-h"><span class="bno">2.7·1</span>导入数据与描述统计<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b1" data-i="0" data-raw="webuse abdata.dta,clear [直接使用网页数据]"><span class="no">1</span><code><span class="k">webuse</span> abdata.dta,<span class="k">clear</span> <span class="c">[直接使用网页数据]</span></code></div><div class="ln has-note" data-b="b1" data-i="1" data-raw="sum n nL1 nL2 w wL1 k kL1 kL2 ys ysL1 ysL2 [对相关变量进行描述性统计]"><span class="no">2</span><code><span class="k">sum</span> n nL1 nL2 w wL1 k kL1 kL2 ys ysL1 ysL2 <span class="c">[对相关变量进行描述性统计]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">静态面板中常用的组内变换（去均值）在动态面板中失效：变换后的滞后被解释变量仍与误差项相关，即 Nickell 偏差，面板的时间维度越短偏误越重，而公司面板通常年份数远少于公司数。Arellano-Bond 的处理办法是先一阶差分消除个体固定效应，再用两期及更深期的滞后项作为差分方程的工具变量。</div></details></div><div class="block"><div class="block-h"><span class="bno">2.7·2</span>差分 GMM：xtabond2<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b2" data-i="0" data-raw="ssc install xtabond2 [安装xtabond2包，用于GMM估计]"><span class="no">1</span><code><span class="k">ssc</span> <span class="k">install</span> <span class="k">xtabond2</span> <span class="c">[安装xtabond2包，用于GMM估计]</span></code></div><div class="ln has-note" data-b="b2" data-i="1" data-raw="xtabond2 n L(1/2).n L(0/1).w L(0/2).(k ys) yr*, gmm(L.n) iv(L(0/1).w L(0/2).(k ys) yr*) nolevel robust small [n表示被解释变量，“L(1/2).n L(0/1).w L(0/2).(k ys) yr*”表示所有的解释变量，L.n被指定为GMM估计中使用的工具变量，iv(L(0/1).w L(0/2).(k ys) yr*)是指定的外生变量，nolevel表示差分GMM（若不加即系统GMM），robust表示稳健标准误，small表示采用小样本统计量]"><span class="no">2</span><code><span class="k">xtabond2</span> n L(1<span class="x">/</span>2).n L(0<span class="x">/</span>1).w L(0<span class="x">/</span>2).(k ys) yr<span class="x">*</span>, <span class="o">gmm</span>(<span class="p">L.n</span>) <span class="o">iv</span>(L(0<span class="x">/</span>1).w L(0<span class="x">/</span>2).(k ys) yr<span class="x">*</span>) <span class="o">nolevel</span> <span class="o">robust</span> <span class="o">small</span> <span class="c">[n表示被解释变量，“L(1/2).n L(0/1).w L(0/2).(k ys) yr*”表示所有的解释变量，L.n被指定为GMM估计中使用的工具变量，iv(L(0/1).w L(0/2).(k ys) yr*)是指定的外生变量，nolevel表示差分GMM（若不加即系统GMM），robust表示稳健标准误，small表示采用小样本统计量]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">xtabond2 的输出按三部分阅读：一看核心滞后项的系数（就业惯性，约 0.6-0.7 且显著）；二看 AR(2) 检验，原假设为差分误差不存在二阶自相关，p 值应大于 0.1，否则工具变量无效；三看 Hansen 检验，原假设为全部工具变量有效，p 值应处于适中水平。经验法则：工具变量个数不超过个体数。差分 GMM 与系统 GMM 的选择：被解释变量接近随机游走时，差分 GMM 存在弱工具问题，系统 GMM 更有效率，但需要额外假设，两种结果常同时报告。</div></details></div>
+
+
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>什么情况下需要动态面板模型？</summary><div class="a">当理论表明当期行为依赖过去状态（投资的调整成本、业绩的持续性），或需要区分状态依赖与反向因果时（书中 Wintoki 等 2012 用其考察董事会结构与公司业绩的因果关系），应在回归中加入被解释变量的滞后项，并使用 GMM 估计。</div></details><details class="qa"><summary>差分 GMM 和系统 GMM 怎么选择？</summary><div class="a">xtabond2 加 nolevel 选项为差分 GMM，去掉 nolevel 即为系统 GMM。被解释变量接近随机游走或面板不平衡程度较高时，差分 GMM 的工具变量较弱，系统 GMM 更有效率；系统 GMM 需要额外假设滞后差分与个体效应不相关，两种结果同时报告更为稳妥。</div></details><details class="qa"><summary>AR(2) 检验的 p 值为 0.03 说明什么？</summary><div class="a">说明差分误差存在二阶自相关，两期及更深滞后作为工具变量的有效性受到质疑。可以调整 GMM 工具的滞后窗口（如 gmm(L.n, lag(2 4))）或修改模型设定；AR(2) 检验通过是 GMM 结果可用的前提。</div></details><details class="qa"><summary>Hansen 检验的 p 值接近 1 是否越好？</summary><div class="a">不一定。工具变量过多会使 Hansen 检验失去辨别能力。经验法则是工具变量个数不超过个体数，并可报告压缩工具数量（collapse 选项）后的结果；p 值落在 0.1 至 0.9 之间较为可信。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Arellano, M. &amp; Bond, S.（1991）：</span><a class="rt" href="https://doi.org/10.2307/2297968" target="_blank" rel="noopener">Some Tests of Specification for Panel Data: Monte Carlo Evidence and an Application to Employment Equations</a>，<span class="rv">The Review of Economic Studies</span></li><li><span class="rw">Wintoki, M. B., Linck, J. S. &amp; Netter, J. M.（2012）：</span><a class="rt" href="https://doi.org/10.1016/j.jfineco.2012.03.005" target="_blank" rel="noopener">Endogeneity and the Dynamics of Internal Corporate Governance</a>，<span class="rv">Journal of Financial Economics</span></li></ul>
+<div class='pn'><a href="../2-6-4/index.html"><div class="dir">← 上一节</div><div class="t">2.6.4 双重差分与事件研究（DID）</div></a><a class="next" href="../2-8-1/index.html"><div class="dir">下一节 →</div><div class="t">2.8.1 安慰剂检验</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{"b1":["直接使用网页数据 abdata（Arellano 和 Bond 1991 使用的英国公司面板）。","对相关变量进行描述性统计。数据中已包含就业、工资、资本与产出变量的各期滞后项。"],"b2":["安装 xtabond2 命令，用于 GMM 估计。","n 表示被解释变量；L(1/2).n L(0/1).w L(0/2).(k ys) yr* 为所有解释变量（各变量的当期与滞后项）；gmm(L.n) 把滞后就业指定为 GMM 估计中使用的工具变量；iv() 中列出标准的外生工具变量；nolevel 表示差分 GMM（不加即为系统 GMM）；robust 表示稳健标准误；small 表示采用小样本统计量。"]}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

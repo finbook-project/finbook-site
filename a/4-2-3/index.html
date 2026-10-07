@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>4.2.3 多因子模型检验：Fama-MacBeth 回归 · 《金融学实证论文写作》配套资源</title>
+<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <span class="crumb">资产定价实证 / 4.2.3 多因子模型检验：Fama-MacBeth 回归</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<span class="kicker">第 4 章 · 资产定价实证研究方法 · 模块 2/7</span>
+<h1 class="doc"><span class="num-badge">4.2.3</span>多因子模型检验：Fama-MacBeth 回归</h1>
+<p class="tagline">两阶段检验：滚动窗口估计因子暴露 + 逐月截面回归取均值</p>
+
+<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<p style="font-size:.92rem">多因子模型的检验有两条路线：以组合排序为基础的时间序列回归（Gibbons 检验），与 Fama 和 MacBeth（1973）的两阶段截面回归。本节演示后者的 Stata 实现：第一步用 asreg 的滚动窗口对每只股票估计因子暴露（beta），第二步把滞后一期的 beta 作为解释变量做逐月截面回归（asreg fmb 或 xtfmb），并对系数均值做 Newey-West 调整。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>asreg 滚动窗口回归：bysort 与 window 选项</li><li>Fama-MacBeth 两阶段：滞后一期 beta 进入截面回归</li><li>asreg fmb 与 xtfmb 两种写法</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">FM回归检验.dta</div><div class="fd">书中 Fama-MacBeth 回归的数据：2000 年 1 月-2019 年 12 月，381933 个股票-月度观测</div><table class="vars"><tr><td>Stkcd / Mon</td><td>股票与交易月份（面板标识）</td><tr><td>RRf</td><td>超额收益率</td><tr><td>BM / Profit / Invest</td><td>账面市值比、盈利与投资特征</td></table><a class="dl-btn" href="../../assets/data/FM回归检验.dta" download>⬇ FM回归检验.dta</a></div>
+
+<h2 class="sec">代码</h2>
+<div class="block"><div class="block-h"><span class="bno">4.2.3·1</span>第一步：时序回归估计因子暴露（滚动窗口）<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b1" data-i="0" data-raw="use &quot; FM回归检验.dta&quot;  [打开数据]"><span class="no">1</span><code><span class="k">use</span> <span class="s">&quot; FM回归检验.dta&quot;</span> <span class="c">[打开数据]</span></code></div><div class="ln has-note" data-b="b1" data-i="1" data-raw="xtset Stkcd Mon  [定义面板数据（横截面变量和时间变量）]"><span class="no">2</span><code><span class="k">xtset</span> Stkcd Mon <span class="c">[定义面板数据（横截面变量和时间变量）]</span></code></div><div class="ln has-note" data-b="b1" data-i="2" data-raw="bysort Stkcd: asreg RRf MKT SMB HML , window(Mon 60)  [通过asreg的bysort和window选项实现窗口为 60 个月，每次向后移动一个月的分组时间序列回归]"><span class="no">3</span><code>bysort Stkcd: asreg RRf MKT SMB HML , window(Mon 60) <span class="c">[通过asreg的bysort和window选项实现窗口为 60 个月，每次向后移动一个月的分组时间序列回归]</span></code></div><div class="ln has-note" data-b="b1" data-i="3" data-raw="keep if _Nobs==60  [保留样本数为60的]"><span class="no">4</span><code><span class="k">keep</span> <span class="k">if</span> _Nobs<span class="x">=</span><span class="x">=</span>60 <span class="c">[保留样本数为60的]</span></code></div><div class="ln has-note" data-b="b1" data-i="4" data-raw="list in 1/10  [以1至10行的数据为例演示。_b_MKT表示MKT的回归系数，其余变量类似。]"><span class="no">5</span><code>list in 1<span class="x">/</span>10 <span class="c">[以1至10行的数据为例演示。_b_MKT表示MKT的回归系数，其余变量类似。]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">Fama-MacBeth 检验的逻辑：如果定价模型正确，第二阶段截面回归中因子暴露的系数应显著（风险有价格），而常数项（α）应不显著异于零。第一步的滚动窗口让 beta 随时间更新，比全样本单次回归更贴近实务。</div></details></div><div class="block"><div class="block-h"><span class="bno">4.2.3·2</span>第二步：截面回归（asreg fmb）<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b2" data-i="0" data-raw="gen L_b_ MKT =L. _b_ MKT      [将MKT的beta系数滞后一期]"><span class="no">1</span><code><span class="k">gen</span> L_b_ MKT <span class="x">=</span>L. _b_ MKT <span class="c">[将MKT的beta系数滞后一期]</span></code></div><div class="ln has-note" data-b="b2" data-i="1" data-raw="gen L_b_ SMB =L. _b_ SMB  [将SMB的beta系数滞后一期]"><span class="no">2</span><code><span class="k">gen</span> L_b_ SMB <span class="x">=</span>L. _b_ SMB <span class="c">[将SMB的beta系数滞后一期]</span></code></div><div class="ln has-note" data-b="b2" data-i="2" data-raw="gen L_b_ HML =L. _b_ HML   [将HML的beta系数滞后一期]"><span class="no">3</span><code><span class="k">gen</span> L_b_ HML <span class="x">=</span>L. _b_ HML <span class="c">[将HML的beta系数滞后一期]</span></code></div><div class="ln has-note" data-b="b2" data-i="3" data-raw="asreg RRf L*, fmb newey(4)    [经过Newey-West调整的回归检验，L*表示所有滞后一期的回归系数，例如L_b_ MKT]"><span class="no">4</span><code>asreg RRf L<span class="x">*</span>, fmb newey(4) <span class="c">[经过Newey-West调整的回归检验，L*表示所有滞后一期的回归系数，例如L_b_ MKT]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">fmb 输出的是各月截面系数的平均值及其 Newey-West t 值——这正是 Fama 和 MacBeth（1973）方法的定义：把每个截面当成一次估计，用系数序列的波动推断显著性，避免了截面相关带来的标准误低估。滞后一期的 beta 是关键细节。</div></details></div><div class="block"><div class="block-h"><span class="bno">4.2.3·3</span>xtfmb 实现<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b3" data-i="0" data-raw="xtfmb RRf L*, lag(4)  [经过Newey-West调整的回归]"><span class="no">1</span><code>xtfmb RRf L<span class="x">*</span>, <span class="o">lag</span>(4) <span class="c">[经过Newey-West调整的回归]</span></code></div></div></div>
+
+
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>fmb 输出的是每个变量的什么结果？</summary><div class="a">asreg fmb 对每个月的截面回归分别估计系数，输出的是各月系数的平均值及其 Newey-West t 值（滞后 4 期）：因子暴露前的系数显著说明该暴露带有风险溢价，常数项（α）不显著说明模型定价无系统性偏差。</div></details><details class="qa"><summary>滚动窗口为什么取 60 个月？</summary><div class="a">60 个月（5 年）是估计个股因子暴露的常用窗口：太短则 beta 噪声大，太长则反应不了暴露的变化。稳健性检验中常对比 36、60、120 个月窗口。</div></details><details class="qa"><summary>为什么 beta 要滞后一期？</summary><div class="a">t 期的 beta 由截至 t-1 期的数据估计而来，直接用当期估计值解释当期收益会引入前视偏差。L. 算子把 beta 后移一个月，保证解释变量在收益实现之前已知。</div></details><details class="qa"><summary>asreg fmb 和 xtfmb 有什么区别？</summary><div class="a">两者都实现 Fama-MacBeth 两阶段中的逐月截面回归并输出系数均值的 Newey-West 检验，结果一致；asreg 需 ssc install asreg，xtfmb 需 ssc install xtfmb。书内同时给出两种写法供选择。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Fama, E. F. &amp; MacBeth, J. D.（1973）：</span><a class="rt" href="https://doi.org/10.1086/260061" target="_blank" rel="noopener">Risk, Return, and Equilibrium: Empirical Tests</a>，<span class="rv">Journal of Political Economy</span></li></ul>
+<div class='pn'><a href="../4-2-2/index.html"><div class="dir">← 上一节</div><div class="t">4.2.2 投资组合排序法</div></a><a class="next" href="../4-2-4/index.html"><div class="dir">下一节 →</div><div class="t">4.2.4 多因子模型比较：α 检验与 GRS 检验</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{"b1":["打开数据。","定义面板数据：横截面变量为 Stkcd（股票），时间变量为 Mon（月份）。","对每只股票做滚动窗口回归：bysort 按股票分组，asreg 配合 window(Mon 60) 实现窗口为 60 个月、每次向后移动一个月的分组时间序列回归，回归系数（因子暴露 beta）以 _b_ 前缀的新变量保存。","只保留窗口内样本数完整为 60 的观测（keep if _Nobs==60），保证每期 beta 都由整整 60 个月估计得到。","以第 1 至 10 行数据演示结果：_b_MKT 表示 MKT 的回归系数（该股票的因子暴露），其余变量类似。"],"b2":["把 MKT 的 beta 系数滞后一期（L. 算子）：用 t-1 期的暴露解释 t 期收益，避免同时性问题。书内命令为排版所拆，变量名中的空格（如 L_b_ MKT）实际应连写为 L_b_MKT。","把 SMB 的 beta 系数滞后一期。","把 HML 的 beta 系数滞后一期。","Fama-MacBeth 截面回归：asreg 的 fmb 选项实现逐月截面回归并对系数序列取均值；newey(4) 对均值做 Newey-West 调整（滞后 4 期）；L* 表示所有滞后一期的回归系数变量。"],"b3":["xtfmb 是面板 Fama-MacBeth 回归的另一个外部命令，与 asreg fmb 等价：lag(4) 同样做 Newey-West 调整。两种写法任选其一。"]}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

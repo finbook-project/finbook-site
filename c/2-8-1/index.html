@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>2.8.1 安慰剂检验 · 《金融学实证论文写作》配套资源</title>
+<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <span class="crumb">公司金融实证 / 2.8.1 安慰剂检验</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<span class="kicker">第 2 章 · 公司金融实证研究方法 · 模块 14/16</span>
+<h1 class="doc"><span class="num-badge">2.8.1</span>安慰剂检验</h1>
+<p class="tagline">假设政策不存在：didplacebo 的时间与空间双重伪检验</p>
+
+<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<p style="font-size:.92rem">安慰剂检验构造一个不应产生效应的伪政策：把政策发生时间提前（时间安慰剂检验），或从样本中随机抽取个体作为伪处理组（空间安慰剂检验）。若伪政策仍然显著，说明原效应可能来自趋势巧合或其他因素。本节沿用 Beck 等（2010）的数据：先复跑基准双重差分回归并用 estimates store 储存，再用 didplacebo 完成两类检验。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>时间安慰剂检验：政策提前 1-10 期，伪效应应不显著</li><li>空间安慰剂检验：随机抽取伪处理州，真实效应应大于伪效应分布</li><li>estimates store 与后续检验命令的衔接</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">macro_workfile.dta</div><div class="fd">与 2.6.4 节相同的州-年面板</div><table class="vars"><tr><td>_intra</td><td>处理变量</td><tr><td>log_gini / 控制变量</td><td>同基准回归</td><tr><td>did_bbb</td><td>estimates store 存下的基准回归结果名</td></table><a class="dl-btn" href="../../assets/data/macro_workfile.dta" download>⬇ macro_workfile.dta</a></div>
+
+<h2 class="sec">代码</h2>
+<div class="block"><div class="block-h"><span class="bno">2.8.1·1</span>基准 DID 回归（同 2.6.4）<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b1" data-i="0" data-raw="use &quot;D:\bigbadbank\macro_workfile.dta&quot;, clear"><span class="no">1</span><code><span class="k">use</span> <span class="s">&quot;D:\bigbadbank\macro_workfile.dta&quot;</span>, <span class="k">clear</span></code></div><div class="ln has-note" data-b="b1" data-i="1" data-raw="ssc install didplacebo [安装didplacebo包，用于DID模型的安慰剂检验]"><span class="no">2</span><code><span class="k">ssc</span> <span class="k">install</span> <span class="k">didplacebo</span> <span class="c">[安装didplacebo包，用于DID模型的安慰剂检验]</span></code></div><div class="ln has-note" data-b="b1" data-i="2" data-raw="tsset statefip wrkyr [将该数据集按照statefip（州）- wrkyr（时间）的维度设定为面板数据]"><span class="no">3</span><code><span class="k">tsset</span> statefip wrkyr <span class="c">[将该数据集按照statefip（州）- wrkyr（时间）的维度设定为面板数据]</span></code></div><div class="ln has-note" data-b="b1" data-i="3" data-raw="tabulate wrkyr, gen(wrkyr_dumm) [基于变量wrkyr创建一系列虚拟变量，每个虚拟变量表示wrkyr是否等于某个年份，即生成时间固定效应虚拟变量]"><span class="no">4</span><code><span class="k">tabulate</span> wrkyr, <span class="k">gen</span>(wrkyr_dumm) <span class="c">[基于变量wrkyr创建一系列虚拟变量，每个虚拟变量表示wrkyr是否等于某个年份，即生成时间固定效应虚拟变量]</span></code></div><div class="ln has-note" data-b="b1" data-i="4" data-raw="tabulate statefip, gen(state_dumm) [同上，用于生成个体固定效应虚拟变量]"><span class="no">5</span><code><span class="k">tabulate</span> statefip, <span class="k">gen</span>(state_dumm) <span class="c">[同上，用于生成个体固定效应虚拟变量]</span></code></div><div class="ln has-note" data-b="b1" data-i="5" data-raw="generate log_gini = log(gini) [对因变量gini对数化]"><span class="no">6</span><code><span class="k">generate</span> log_gini <span class="x">=</span> <span class="k">log</span>(gini) <span class="c">[对因变量gini对数化]</span></code></div><div class="ln has-note" data-b="b1" data-i="6" data-raw="local Xs gsp_pc_growth prop_blacks prop_dropouts prop_female_headed unemploymentrate [用Xs来代表后面这组控制变量]"><span class="no">7</span><code><span class="k">local</span> Xs gsp_pc_growth prop_blacks prop_dropouts prop_female_headed unemploymentrate <span class="c">[用Xs来代表后面这组控制变量]</span></code></div><div class="ln has-note" data-b="b1" data-i="7" data-raw="xtreg log_gini _intra `Xs&#x27; wrkyr_dumm*, fe i(statefip) robust cluster(statefip) [使用以log_gini为因变量、_intra为自变量的固定效应模型，并使用了稳健标准误差，聚类到statefip层面]"><span class="no">8</span><code><span class="k">xtreg</span> log_gini _intra <span class="s">`Xs&#x27;</span> wrkyr_dumm<span class="x">*</span>, <span class="o">fe</span> i(statefip) <span class="o">robust</span> <span class="o">cluster</span>(statefip) <span class="c">[使用以log_gini为因变量、_intra为自变量的固定效应模型，并使用了稳健标准误差，聚类到statefip层面]</span></code></div><div class="ln has-note" data-b="b1" data-i="8" data-raw="estimates store did_bbb, title(Log Gini) [以did_bbb为名称储存回归结果]"><span class="no">9</span><code><span class="k">estimates</span> <span class="k">store</span> did_bbb, <span class="o">title</span>(<span class="k">Log</span> Gini) <span class="c">[以did_bbb为名称储存回归结果]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">estimates store 把回归结果保存在内存中，供 esttab、estat 以及本节的 didplacebo 等命令反复调用。didplacebo 的设计即建立在这一机制上：对储存的估计对象调整政策时间或处理个体，不需要改动基准设定。</div></details></div><div class="block"><div class="block-h"><span class="bno">2.8.1·2</span>时间安慰剂检验<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b2" data-i="0" data-raw="didplacebo did_bbb, treatvar(_intra) pbotime(1(1)10) [对did_bbb进行时间安慰剂检验，指定处理变量为_intra，指定前置期数pbotime为1-10期，即分别将政策时间提前1至10期进行检验]"><span class="no">1</span><code><span class="k">didplacebo</span> did_bbb, <span class="o">treatvar</span>(_intra) <span class="o">pbotime</span>(1(1)10) <span class="c">[对did_bbb进行时间安慰剂检验，指定处理变量为_intra，指定前置期数pbotime为1-10期，即分别将政策时间提前1至10期进行检验]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">时间安慰剂检验中提前期数不宜过多：提前越多，剩余样本越短，检验的噪声越大，通常 3 至 8 期最有说服力。通过的标准是绝大多数前置期系数不显著，且没有系统性的符号规律。</div></details></div><div class="block"><div class="block-h"><span class="bno">2.8.1·3</span>空间安慰剂检验<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b3" data-i="0" data-raw="didplacebo did_bbb, treatvar(_intra) pbounit rep(100) [对did_bbb进行空间安慰剂检验，指定处理变量为_intra，指定重复抽样100次]"><span class="no">1</span><code><span class="k">didplacebo</span> did_bbb, <span class="o">treatvar</span>(_intra) <span class="o">pbounit</span> <span class="o">rep</span>(100) <span class="c">[对did_bbb进行空间安慰剂检验，指定处理变量为_intra，指定重复抽样100次]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">空间安慰剂检验的重复次数越多，伪效应分布越平滑，正式研究常报告 500 至 1000 次。呈现方式通常为伪效应分布的直方图加上真实效应的竖线，直观显示真实效应落在分布尾部。</div></details></div>
+
+
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>安慰剂检验通过是否等同于因果确凿？</summary><div class="a">安慰剂检验是必要条件而非充分条件：通过说明效应不是来自趋势巧合或个体指派巧合，但不能排除与政策同期发生的其他冲击。因果结论仍需平行趋势、机制分析、稳健性检验等多重证据支持。</div></details><details class="qa"><summary>rep(100) 次是否太少？</summary><div class="a">100 次得到的伪效应分布较粗糙，尾部 p 值的精度有限；正式论文一般使用 500 至 1000 次。教学中 100 次足以说明方法。</div></details><details class="qa"><summary>didplacebo 报错找不到估计结果？</summary><div class="a">该命令调用内存中由 estimates store 保存的结果，必须先运行基准回归并 store（名称保持一致）。中途 clear 或运行其他回归会覆盖内存中的结果，需要重新执行基准回归后再检验。</div></details><details class="qa"><summary>书中 Bernstein（2015）的安慰剂检验是什么思路？</summary><div class="a">把核心解释变量替换为不应影响结果的时间窗口内的同一变量（例如 IPO 结果公布之后的股票收益率），若更换窗口后效应消失，说明原效应确实来自 IPO 询价阶段的不确定性。这是变量替换式的安慰剂检验，与时间、空间置换的思路相同。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Beck, T., Levine, R. &amp; Levkov, A.（2010）：</span><a class="rt" href="https://doi.org/10.1111/j.1540-6261.2010.01589.x" target="_blank" rel="noopener">Big Bad Banks? The Winners and Losers from Bank Deregulation in the United States</a>，<span class="rv">The Journal of Finance</span></li><li><span class="rw">Bernstein, S.（2015）：</span><a class="rt" href="https://doi.org/10.1111/jofi.12275" target="_blank" rel="noopener">Does Going Public Affect Innovation?</a>，<span class="rv">The Journal of Finance</span></li><li><span class="rw">Huang, Z., Xu, L. C. 等（2017）：</span><a class="rt" href="https://doi.org/10.1257/aer.20150592" target="_blank" rel="noopener">Hayek, Local Information, and Commanding Heights: Decentralizing State-Owned Enterprises in China</a>，<span class="rv">American Economic Review</span></li></ul>
+<div class='pn'><a href="../2-7/index.html"><div class="dir">← 上一节</div><div class="t">2.7 动态面板与 GMM 估计</div></a><a class="next" href="../2-8-2/index.html"><div class="dir">下一节 →</div><div class="t">2.8.2 似不相关回归（SUR）</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{"b1":["读入与 2.6.4 节相同的主分析数据，路径替换为本机位置。","安装 didplacebo 命令，用于 DID 模型的安慰剂检验。","将该数据集按照 statefip - wrkyr 的维度设定为面板数据。","基于变量 wrkyr 创建时间固定效应虚拟变量。","同上，创建个体固定效应虚拟变量。","对因变量 gini 对数化。","用 Xs 代表五个州层面控制变量。","基准回归：与 2.6.4 节完全相同的设定（固定效应模型、稳健标准误、聚类到州层面）。","以 did_bbb 为名称储存回归结果。didplacebo 不重新估计模型，而是调用内存中储存的这一结果进行检验，因此应先 store 后检验。"],"b2":["对 did_bbb 进行时间安慰剂检验：treatvar 指定处理变量 _intra，pbotime(1(1)10) 表示把政策时间分别提前 1 至 10 期逐一估计。若前置各期的系数均不显著（书中结果除前置 2 期外均不显著），说明处理效应并非由趋势或预期驱动。"],"b3":["对 did_bbb 进行空间安慰剂检验：pbounit 从样本中无放回地随机抽取个体作为伪处理组，rep(100) 表示重复抽样 100 次，得到伪效应的分布。输出报告的双边与单边 p 值均小于 0.01，说明真实处理效应显著大于随机分配的安慰剂效应，检验通过。"]}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>3.3.1 标准 VAR：定阶、脉冲响应与方差分解 · 《金融学实证论文写作》配套资源</title>
+<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <span class="crumb">宏观金融实证 / 3.3.1 标准 VAR：定阶、脉冲响应与方差分解</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<span class="kicker">第 3 章 · 宏观金融实证研究方法 · 模块 5/9</span>
+<h1 class="doc"><span class="num-badge">3.3.1</span>标准 VAR：定阶、脉冲响应与方差分解</h1>
+<p class="tagline">多元时间序列的系统分析：VAR 估计全流程</p>
+
+<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<p style="font-size:.92rem">VAR 把系统中每个变量对其自身与其他全部变量的滞后项回归，不依赖外生的解释变量设定，是宏观金融中最常用的多元时间序列模型。本节按书中 Christiano 等（2005）的四变量示例演示 EViews 的完整流程：滞后阶数选择、VAR 估计、脉冲响应与方差分解。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>VAR 的估计操作与滞后阶数选择（书中：AIC 与 SC 在滞后 3 期同时最小）</li><li>脉冲响应函数：Cholesky 正交化与变量顺序</li><li>方差分解的阅读</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">var.wf1 与 myirf1.irf</div><div class="fd">书中 VAR 的 EViews 工作文件与配套脉冲响应文件（Christiano 等 2005 的指标与数据：美国联邦基准利率、实际 GDP、实际消费支出与实际投资的季度数据，1955-2022 年，源于 Wind 数据库；irf 文件需与 wf1 一起使用）</div><table class="vars"><tr><td>dr / dy / dc / di</td><td>书中在 Endogenous variables 处输入的四个变量（利率、产出、消费、投资）</td><tr><td>LOGY / LOGC / LOGI</td><td>工作文件中对数形式序列</td></table><a class="dl-btn" href="../../assets/data/var.wf1" download>⬇ var.wf1</a> <a class="dl-btn" href="../../assets/data/myirf1.irf" download>⬇ myirf1.irf</a></div>
+
+<h2 class="sec">操作步骤</h2><div class="stepgrp"><div class="stepgrp-t">VAR 建模流程（书中示例：dr dy dc di）</div><ol><li>书中以 Christiano 等（2005）选取的指标为例：美国联邦基准利率、实际 GDP、实际消费支出与实际投资的季度数据（1955-2022 年，Wind 数据库）</li><li>Quick – Estimate VAR，VAR Type 选 Unrestricted VAR，在 Endogenous variables 处输入 dr dy dc di</li><li>根据 AIC 和 SC 准则选择滞后阶数：书中两个准则在滞后 3 期同时达到最小</li><li>View – Impulse Response：设定冲击变量与响应变量、响应期数与正交化方式（默认 Cholesky，分解顺序敏感）；书中图 3.3.9 为利率冲击的脉冲响应</li><li>View – Variance Decomposition 查看各冲击对不同变量预测误差方差的贡献（书中图 3.3.10）</li><li>VEC 的脉冲响应与方差分解操作相同（书中图 3.3.11、图 3.3.12）</li></ol></div><p class="res-note">以上步骤依据书中正文与 EViews 菜单整理；对应的 EViews 工作文件见上方数据卡。</p>
+
+
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>滞后阶数怎么选？</summary><div class="a">看 View – Lag Length Criteria 输出的各准则推荐阶数：AIC 倾向选多、SC 更保守。书中示例中 AIC 与 SC 在滞后 3 期同时最小，直接取 3；两个准则不一致时，通常以 SC 为主、报告另一准则的结果做稳健性。</div></details><details class="qa"><summary>Cholesky 分解顺序为什么重要？</summary><div class="a">正交化脉冲响应依赖变量的排序：排在前面的变量当期可以影响后面的变量，反之不能。排序改变，脉冲响应随之改变。选择顺序应依据经济理论（如产出在价格之前、政策变量最后），并报告不同顺序的结果。</div></details><details class="qa"><summary>脉冲响应和方差分解是什么关系？</summary><div class="a">两者基于同一组正交化冲击：脉冲响应刻画一个冲击对变量的动态影响路径，方差分解把变量的预测误差方差按冲击来源分解，是对同一系统的两种阅读方式。</div></details><details class="qa"><summary>VAR 要求变量平稳吗？</summary><div class="a">标准 VAR 在平稳变量上估计。变量为 I(1) 且存在协整时使用 VEC；没有协整关系时对差分序列估计 VAR。对水平变量直接估计 VAR 的做法存在争议（多数宏观变量的临界值不再标准），书中按规范流程先做平稳性检验。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Sims, C. A.（1980）：</span><a class="rt" href="https://doi.org/10.2307/1912017" target="_blank" rel="noopener">Macroeconomics and Reality</a>，<span class="rv">Econometrica</span></li><li><span class="rw">Lütkepohl, H.（2005）：</span><a class="rt" href="https://doi.org/10.1007/3-540-27752-8" target="_blank" rel="noopener">New Introduction to Multiple Time Series Analysis</a>，<span class="rv">Springer</span></li></ul>
+<div class='pn'><a href="../3-2-2/index.html"><div class="dir">← 上一节</div><div class="t">3.2.2 误差修正模型（VEC）</div></a><a class="next" href="../3-3-2/index.html"><div class="dir">下一节 →</div><div class="t">3.3.2 结构 VAR（SVAR）</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

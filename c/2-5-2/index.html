@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>2.5.2 控制变量的选取 · 《金融学实证论文写作》配套资源</title>
+<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <span class="crumb">公司金融实证 / 2.5.2 控制变量的选取</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<span class="kicker">第 2 章 · 公司金融实证研究方法 · 模块 5/16</span>
+<h1 class="doc"><span class="num-badge">2.5.2</span>控制变量的选取</h1>
+<p class="tagline">控制变量放什么、为什么放：reg 与 reghdfe noabsorb 的等价对照</p>
+
+<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<p style="font-size:.92rem">控制变量用于吸收那些同时影响被解释变量、又与核心解释变量相关的可观测因素。本节用同一个回归比较 reg 与 reghdfe …, noabsorb 两种写法：不控制固定效应时，两者结果完全相同；采用 reghdfe 的写法，便于在后续小节中直接加入固定效应。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>控制变量的选取依据：经济理论与参考文献</li><li>reg 与 reghdfe noabsorb 在不控制固定效应时完全等价</li><li>坏控制变量（bad controls）的概念</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">公司金融数据例5.dta</div><div class="fd">主回归面板（50053 条观测）</div><table class="vars"><tr><td>TobinQ（投资机会）</td><td>投资理论的经典控制变量</td><tr><td>企业性质/公司规模/资产负债率</td><td>产权、规模与杠杆</td></table><a class="dl-btn" href="../../assets/data/公司金融数据例5.dta" download>⬇ 公司金融数据例5.dta</a></div>
+
+<h2 class="sec">代码</h2>
+<div class="block"><div class="block-h"><span class="bno">2.5.2·1</span>控制变量的选取<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b1" data-i="0" data-raw="clear"><span class="no">1</span><code><span class="k">clear</span></code></div><div class="ln has-note" data-b="b1" data-i="1" data-raw="cd 公司金融数据例5.dta的路径位置"><span class="no">2</span><code><span class="k">cd</span> 公司金融数据例5.dta的路径位置</code></div><div class="ln has-note" data-b="b1" data-i="2" data-raw="use 公司金融数据例5.dta"><span class="no">3</span><code><span class="k">use</span> 公司金融数据例5.dta</code></div><div class="ln has-note" data-b="b1" data-i="3" data-raw="reg 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率 [第一个变量（公司投资）是因变量，第二个变量（现金流）是核心解释变量，第三个变量及其之后（TobinQ、企业性质、公司规模、资产负债率）均为控制变量]"><span class="no">4</span><code><span class="k">reg</span> 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率 <span class="c">[第一个变量（公司投资）是因变量，第二个变量（现金流）是核心解释变量，第三个变量及其之后（TobinQ、企业性质、公司规模、资产负债率）均为控制变量]</span></code></div><div class="ln has-note" data-b="b1" data-i="4" data-raw="reghdfe 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率, noabsorb [实证设定如上，noabsorb表示不控制任何固定效应]"><span class="no">5</span><code><span class="k">reghdfe</span> 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率, <span class="o">noabsorb</span> <span class="c">[实证设定如上，noabsorb表示不控制任何固定效应]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">控制变量的选取应以经济理论和参考文献为依据，而不是反复尝试后保留显著的变量。需要注意的是坏控制变量问题：在核心解释变量之后才被决定的变量（例如因果链条上的中间变量）进入回归后会吸收真实效应，不应作为控制变量；判断标准是该变量是否在核心解释变量发生之前已经确定。</div></details></div>
+
+<h2 class="sec">结果与图示</h2>
+<h3 class="sub">reg 与 reghdfe …, noabsorb 的结果逐位一致</h3><table class='res'><tr><th></th><th>reg（OLS）</th><th>reghdfe …, noabsorb（不吸收任何固定效应）</th></tr><tr><td>常数项</td><td>0.0491<span class="star">***</span><span class="se">(10.64)</span></td><td>0.0491<span class="star">***</span><span class="se">(10.64)</span></td></tr><tr><td>现金流</td><td>-0.0028<span class="star">***</span><span class="se">(-5.00)</span></td><td>-0.0028<span class="star">***</span><span class="se">(-5.00)</span></td></tr><tr><td>TobinQ</td><td>-0.0024<span class="star">***</span><span class="se">(-12.49)</span></td><td>-0.0024<span class="star">***</span><span class="se">(-12.49)</span></td></tr><tr><td>企业性质</td><td>-0.0047<span class="star">***</span><span class="se">(-9.05)</span></td><td>-0.0047<span class="star">***</span><span class="se">(-9.05)</span></td></tr><tr><td>公司规模</td><td>0.0008<span class="star">***</span><span class="se">(3.87)</span></td><td>0.0008<span class="star">***</span><span class="se">(3.87)</span></td></tr><tr><td>资产负债率</td><td>-0.0102<span class="star">***</span><span class="se">(-8.22)</span></td><td>-0.0102<span class="star">***</span><span class="se">(-8.22)</span></td></tr><tr class='meta'><td>N</td><td>45,246</td><td>45,246</td></tr><tr class='meta'><td>R²</td><td>0.0081</td><td>0.0081</td></tr></table><p class='res-note'>两种命令的数字逐位一致——noabsorb 就是不吸收固定效应的 OLS。</p><p class='res-note'>括号内为 t 值；星号：*** p&lt;0.01，** p&lt;0.05，* p&lt;0.1。</p>
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>控制变量应该怎么选取？</summary><div class="a">先根据经济理论列出同时影响被解释变量与核心解释变量的因素，再参考同主题已发表论文的基准回归确定。不应通过反复增删变量寻找显著结果；把不同控制变量组合的结果放入附表是常见的稳健性做法。</div></details><details class="qa"><summary>什么是坏控制变量？</summary><div class="a">在核心解释变量之后才被决定的变量，例如因果链条上的中间变量，或与被解释变量共同决定的变量。控制这类变量会吸收真实效应或引入新的偏误；判断标准是该变量是否在核心解释变量发生之前已经确定。</div></details><details class="qa"><summary>noabsorb 有什么作用？既然不吸收固定效应，为什么不直接用 reg？</summary><div class="a">noabsorb 使 reghdfe 估计不含固定效应的普通 OLS，结果与 reg 相同。统一命令形式是为了便于在同一个脚本中切换不同的固定效应设定，只需修改 absorb 选项。</div></details><details class="qa"><summary>控制了很多变量之后结果显著，能否说明是因果关系？</summary><div class="a">只能说明结论对可观测的混淆因素稳健。不可观测的混淆因素（如企业能力、管理层预期）仍可能同时影响解释变量与被解释变量；因果关系的识别需要 2.6 节介绍的方法。</div></details>
+
+<div class='pn'><a href="../2-5-1/index.html"><div class="dir">← 上一节</div><div class="t">2.5.1 静态面板回归：基准回归与结果导出</div></a><a class="next" href="../2-5-4/index.html"><div class="dir">下一节 →</div><div class="t">2.5.4 固定效应的四种实现</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{"b1":["清空已有数据。","设定工作路径。","导入例5。","以公司投资为因变量，现金流为核心解释变量，TobinQ、企业性质、公司规模、资产负债率为控制变量。TobinQ 代表投资机会，公司规模与资产负债率反映融资能力与约束；这些变量既影响公司投资又与现金流相关，属于必要的控制变量。","实证设定同上，noabsorb 表示不控制任何固定效应。此时 reghdfe 与 reg 估计同一个 OLS，结果完全相同（见下方结果表）。统一使用 reghdfe 的好处是脚本形式一致：后续加入固定效应时，只需把 noabsorb 改为 absorb(变量1 变量2)。"]}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>
