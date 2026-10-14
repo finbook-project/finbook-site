@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>4.3.2 Python 安装与 Jupyter 设置</title>
+<link rel="stylesheet" href="../../assets/style.css?v=f9c3a861">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home on" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<h1 class="doc"><span class="num-badge">4.3.2</span>Python 安装与 Jupyter 设置</h1>
+
+<div class="card">
+<p style="font-size:.92rem">第 4.3 节的机器学习部分在 Python 中实现。本小节按书中步骤完成环境准备：安装 Python、用 pip 安装 Jupyter notebook 并启动编程环境；随后的数据预处理与建模都在 notebook 中完成。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>从 python.org 安装 Python（Windows 环境）</li><li>pip3 安装 Jupyter notebook</li><li>启动 Jupyter 并新建笔记本</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">机器学习在资产定价领域的运用.ipynb</div><div class="fd">书中配套 notebook：包含 4.3.3 与 4.3.4 的全部代码（33 个单元格，已在书中数据上执行过）</div><table class="vars"><tr><td>datashare/return.csv 与 factors.csv</td><td>notebook 读取的两份数据（见下一节的说明）</td></table><a class="dl-btn" href="../../assets/data/机器学习在资产定价领域的运用.ipynb" download>⬇ 机器学习在资产定价领域的运用.ipynb</a></div>
+
+<h2 class="sec">操作步骤</h2><div class="stepgrp"><div class="stepgrp-t">安装 Python</div><ol><li>访问 python.org 下载 Windows 安装包（书中图 4.3.2）</li><li>安装时勾选 Add Python to PATH，完成后在 cmd 中输入 python 验证（图 4.3.4）</li></ol></div><div class="stepgrp"><div class="stepgrp-t">安装与启动 Jupyter notebook</div><ol><li>在 cmd 中输入 pip3 install jupyter 安装（图 4.3.5）</li><li>安装完成后输入 jupyter notebook 启动，浏览器打开主页（图 4.3.6）</li><li>新建笔记本：New – Python 3，进入单元格编辑界面（图 4.3.7）</li><li>本书配套的完整 notebook 见上方数据卡，可直接打开对照运行</li></ol></div><p class="res-note">以上步骤依据书中正文与 EViews 菜单整理；对应的 EViews 工作文件见上方数据卡。</p>
+
+
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>python 和 pip3 命令无反应怎么办？</summary><div class="a">多数是安装时未勾选 Add Python to PATH。重新运行安装包勾选该选项，或手动把 Python 安装目录与 Scripts 子目录加入系统环境变量 PATH 后重开 cmd。</div></details><details class="qa"><summary>需要额外安装哪些库？</summary><div class="a">书中建模用到 pandas、numpy、scikit-learn 与 Keras（tensorflow）。常规的 pip3 install pandas numpy scikit-learn tensorflow 即可；notebook 首次运行报缺少哪个库就补装哪个。</div></details><details class="qa"><summary>为什么用 Jupyter notebook 而不是直接跑脚本？</summary><div class="a">notebook 把代码、输出与说明按单元格组织，适合分步骤演示与教学对照；书中 4.3 各步骤的截图均来自 notebook 界面，配套 notebook 也按此组织。</div></details>
+
+<div class='pn'><a href="../4-2-4/index.html"><div class="dir">← 上一节</div><div class="t">4.2.4 多因子模型比较：α 检验与 GRS 检验</div></a><a class="next" href="../4-3-3/index.html"><div class="dir">下一节 →</div><div class="t">4.3.3 机器学习定价：数据预处理（Python）</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

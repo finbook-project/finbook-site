@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>3.2.1 协整分析：EG 两步法与 Johansen 检验</title>
+<link rel="stylesheet" href="../../assets/style.css?v=f9c3a861">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home on" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<h1 class="doc"><span class="num-badge">3.2.1</span>协整分析：EG 两步法与 Johansen 检验</h1>
+
+<div class="card">
+<p style="font-size:.92rem">多个非平稳序列的线性组合可能是平稳的，此时称序列之间存在协整关系，水平序列的回归才有意义，否则容易出现伪回归。本节演示两种检验方法：EG 两步法以人均消费支出与人均可支配收入为例，Johansen 检验以国债利率系统为例，均为书中使用的示例数据。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>EG 两步法：残差 ADF 检验协整</li><li>Johansen 检验：迹统计量与最大特征值统计量、协整秩的确定</li><li>协整关系与伪回归的区别</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">中国_全国居民人均可支配收入_累计值.xls</div><div class="fd">书中 EG 两步法的示例数据：人均消费支出与人均可支配收入（国家统计局季度累计值，先做 X12 季节调整得到 cp_sa、inc_sa），40 个观测</div><table class="vars"><tr><td>Aincome</td><td>人均可支配收入（累计值）</td><tr><td>Aconsumption</td><td>人均消费支出（累计值）</td></table><a class="dl-btn" href="../../assets/data/中国_全国居民人均可支配收入_累计值.xls" download>⬇ 中国_全国居民人均可支配收入_累计值.xls</a></div><div class="data-card"><div class="fn">yields.xls（书中 Johansen 示例数据）</div><div class="fd">Bauer 和 Rudebusch（2020）的国债利率数据：书中选取 3 个月、半年、1 年、5 年、10 年期五个期限，1972-2017 年季度，184 个观测</div><table class="vars"><tr><td>y0.25 / y0.5 / y1 / y5 / y10</td><td>书中 Johansen 检验与 VEC 使用的五个期限利率</td><tr><td>y0.25 … y15</td><td>文件共含 17 个期限的到期收益率</td></table><a class="dl-btn" href="../../assets/data/yields.xls" download>⬇ yields.xls</a></div><div class="data-card"><div class="fn">Johansen检验数据.xls（文献示例）</div><div class="fd">书中图 3.2.4 引用的 Muscatelli 和 Spinelli（2000）货币需求数据：意大利年度数据，检验 M、Y、INF、rs、rl 五个变量间的协整</div><table class="vars"><tr><td>m / p / y</td><td>货币、物价与实际收入</td><tr><td>rs / rl</td><td>存款利率与国债收益率</td></table><a class="dl-btn" href="../../assets/data/Johansen检验数据.xls" download>⬇ Johansen检验数据.xls</a></div><div class="data-card"><div class="fn">EViews 工作文件（三个）</div><div class="fd">分别对应 EG 检验（收入-消费）、Muscatelli-Spinelli 货币数据与国债利率检验</div><table class="vars"><tr><td>INC_SA / CP_SA</td><td>EG 检验的季节调整序列</td><tr><td>Y10 / YSS / VEC / CointEq1</td><td>国债利率检验序列与 VEC 对象（书中图 3.2.5）</td></table><a class="dl-btn" href="../../assets/data/eg test.wf1" download>⬇ eg test.wf1</a> <a class="dl-btn" href="../../assets/data/johansen检验数据.wf1" download>⬇ johansen检验数据.wf1</a> <a class="dl-btn" href="../../assets/data/johansen test.wf1" download>⬇ johansen test.wf1</a></div>
+
+<h2 class="sec">操作步骤</h2><div class="stepgrp"><div class="stepgrp-t">EG 两步法（书中示例：人均收入与消费）</div><ol><li>国家统计局的季度数据为累计值，先做 X12 季节调整得到 inc_sa 与 cp_sa</li><li>对两个变量分别做 ADF 检验，确认它们同为一阶单整 I(1)</li><li>以 OLS 估计长期关系：书中在方程设定框中输入 cp_sa 和 inc_sa（图 3.2.1）</li><li>对残差做 ADF 检验（不含常数与趋势），统计量小于临界值即拒绝无协整</li></ol></div><div class="stepgrp"><div class="stepgrp-t">Johansen 检验（书中示例：国债利率）</div><ol><li>书中运用 Bauer 和 Rudebusch（2020）的数据：选取 3 个月、半年、1 年、5 年、10 年期国债利率，1972-2017 年季度</li><li>将五个序列以 Group 方式打开，View – Cointegration Test</li><li>确定性项选择第三个选项（含截距项、无趋势），最优滞后阶数为 1 期（书中设定）</li><li>输出包含迹统计量与最大特征值统计量两列，从 r = 0 开始逐个与临界值比较：第一个不显著的行之前的显著个数即协整秩</li></ol></div><p class="res-note">以上步骤依据书中正文与 EViews 菜单整理；对应的 EViews 工作文件见上方数据卡。</p>
+
+<h2 class="sec">结果与图示</h2>
+<h3 class="sub">EG 两步法检验结果（收入-消费，书中示例数据）</h3><table class='res'><tr><th>变量对</th><th>N</th><th>EG 统计量</th><th>5% 临界值</th><th>结论</th></tr><tr><td>log(人均可支配收入) 与 log(人均消费支出)</td><td>40</td><td>-0.434</td><td>-3.497</td><td>不能拒绝无协整</td></tr><tr><td>10 年期 与 1 年期国债到期收益率</td><td>184</td><td>-4.021</td><td>-3.37</td><td>拒绝无协整，存在长期均衡关系</td></tr></table><p class='res-note'>EG 两步法：先检验两变量同为 I(1)，再以 OLS 估计长期关系、对残差做（不含常数项的）ADF 检验。表中为残差检验统计量，小于 5% 临界值即拒绝无协整。书中先对季度累计值做 X12 季节调整（inc_sa、cp_sa）再检验；本表为对数累计值直接检验。本例 EG 检验不能拒绝无协整、而 Johansen 检验（见下）拒绝，两种检验结论不一致在小样本中并不罕见，此时通常以 Johansen 的系统检验为准，并报告两种结果。</p>
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>什么是伪回归？</summary><div class="a">两个相互独立的 I(1) 序列做水平回归，往往得到很高的 R² 与显著的 t 统计量，但两者并无真实关系，这就是伪回归。判断办法是对回归残差做单位根检验：残差平稳说明存在协整，回归结果才有意义。</div></details><details class="qa"><summary>EG 检验和 Johansen 检验结论不一致怎么办？</summary><div class="a">小样本中并不少见（本节示例即出现：EG 不能拒绝无协整，而 Johansen 检验显著拒绝）。此时通常以多变量系统的 Johansen 检验为准，同时报告两种结果；也可以更换检验设定（确定性项、滞后阶数）做敏感性分析。</div></details><details class="qa"><summary>迹统计量与最大特征值统计量矛盾怎么办？</summary><div class="a">多数应用以迹统计量为准，因为迹统计量综合了全部秩假设的信息；两者不一致时报告两套结果，并在解释中说明所选秩的依据（经济含义与设定检验）。</div></details><details class="qa"><summary>协整向量怎么解释？</summary><div class="a">协整向量刻画变量之间的长期均衡关系，系数可解释为长期弹性或长期乘数，例如货币需求方程中收入与利率的长期系数。协整关系本身不含短期动态，短期调整由误差修正模型刻画（下一节）。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Engle, R. F. &amp; Granger, C. W. J.（1987）：</span><a class="rt" href="https://doi.org/10.2307/1913236" target="_blank" rel="noopener">Co-Integration and Error Correction: Representation, Estimation, and Testing</a>，<span class="rv">Econometrica</span></li><li><span class="rw">Johansen, S.（1988）：</span><a class="rt" href="https://doi.org/10.1016/0165-1889(88)90041-3" target="_blank" rel="noopener">Statistical Analysis of Cointegration Vectors</a>，<span class="rv">Journal of Economic Dynamics and Control</span></li><li><span class="rw">Johansen, S.（1991）：</span><a class="rt" href="https://doi.org/10.2307/2938278" target="_blank" rel="noopener">Estimation and Hypothesis Testing of Cointegration Vectors in Gaussian Vector Autoregressive Models</a>，<span class="rv">Econometrica</span></li></ul>
+<div class='pn'><a href="../3-1-3/index.html"><div class="dir">← 上一节</div><div class="t">3.1.3 时间序列数据的性质</div></a><a class="next" href="../3-2-2/index.html"><div class="dir">下一节 →</div><div class="t">3.2.2 误差修正模型（VEC）</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

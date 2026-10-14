@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>2.3 描述性统计分析</title>
+<link rel="stylesheet" href="../../assets/style.css?v=f9c3a861">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <a class="home" href="../../index.html">首页</a><a class="home on" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<h1 class="doc"><span class="num-badge">2.3</span>描述性统计分析</h1>
+
+<div class="card">
+<p style="font-size:.92rem">描述性统计分析是实证论文的第一张表，用于反映数据集的基本特征、判断变量度量是否合理、数据处理过程是否合理。本节用 tabstat 演示四种常用形式：全样本汇报、限定年份的子样本汇报、按行业分组汇报，以及条件与分组的叠加使用。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>tabstat 汇报自选统计量（均值、标准差、中位数、极值、观测数）</li><li>if 条件限定子样本、by() 选项分组汇报的写法</li><li>从描述性统计表检查变量量纲、分布偏态与缺失情况</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">公司金融数据例5.dta</div><div class="fd">主回归面板数据：50053 条公司-年度观测（2000-2022）</div><table class="vars"><tr><td>公司投资/现金流</td><td>回归的被解释变量与核心解释变量</td><tr><td>TobinQ/企业性质/公司规模/资产负债率</td><td>控制变量</td><tr><td>时间变量/行业变量</td><td>分组与条件筛选的维度</td></table><a class="dl-btn" href="../../assets/data/公司金融数据例5.dta" download>⬇ 公司金融数据例5.dta</a></div>
+
+<h2 class="sec">代码</h2>
+<div class="block"><div class="block-h"><span class="bno">1</span>描述性统计：tabstat 的四种用法<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b1" data-i="0" data-raw="clear"><span class="no">1</span><code><span class="k">clear</span></code></div><div class="ln has-note" data-b="b1" data-i="1" data-raw="cd 公司金融数据例5.dta的路径位置"><span class="no">2</span><code><span class="k">cd</span> 公司金融数据例5.dta的路径位置</code></div><div class="ln has-note" data-b="b1" data-i="2" data-raw="use 公司金融数据例5.dta"><span class="no">3</span><code><span class="k">use</span> 公司金融数据例5.dta</code></div><div class="ln has-note" data-b="b1" data-i="3" data-raw="tabstat 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率, stats (mean sd median max min count) [汇报平均值、标准差、中位数、最大值、最小值、非缺失观测值数量]"><span class="no">4</span><code><span class="k">tabstat</span> 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率, <span class="o">stats</span> (mean sd median max min count) <span class="c">[汇报平均值、标准差、中位数、最大值、最小值、非缺失观测值数量]</span></code></div><div class="ln has-note" data-b="b1" data-i="4" data-raw="tabstat 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率 if 时间变量==2001, stats (mean sd median max min count) [仅限2001年的观测值]"><span class="no">5</span><code><span class="k">tabstat</span> 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率 <span class="k">if</span> 时间变量<span class="x">=</span><span class="x">=</span>2001, <span class="o">stats</span> (mean sd median max min count) <span class="c">[仅限2001年的观测值]</span></code></div><div class="ln has-note" data-b="b1" data-i="5" data-raw="tabstat 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率, by(行业变量) stat(mean sd median max min count) [按照公司所处行业分组汇报（此处限于篇幅仅展示前三个行业）]"><span class="no">6</span><code><span class="k">tabstat</span> 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率, <span class="o">by</span>(行业变量) <span class="o">stat</span>(mean sd median max min count) <span class="c">[按照公司所处行业分组汇报（此处限于篇幅仅展示前三个行业）]</span></code></div><div class="ln has-note" data-b="b1" data-i="6" data-raw="tabstat 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率 if 时间变量==2001, by(行业变量) stats (mean sd median max min count) [叠加上述两个功能]"><span class="no">7</span><code><span class="k">tabstat</span> 公司投资 现金流 TobinQ 企业性质 公司规模 资产负债率 <span class="k">if</span> 时间变量<span class="x">=</span><span class="x">=</span>2001, <span class="o">by</span>(行业变量) <span class="o">stats</span> (mean sd median max min count) <span class="c">[叠加上述两个功能]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">描述性统计是实证论文的第一张表。阅读时应关注三个方面：一是变量的量纲与取值范围是否合理，比值型变量的最大值、最小值应落在合理区间内；二是平均值与中位数的差距，差距较大说明分布右偏，此时中位数更能反映集中趋势；三是各变量的非缺失观测数。书中 2.3.2 给出的错误示例中，比值变量的最大值达到数百倍、部分变量的极值明显异常，均为未缩尾或度量错误的典型信号。</div></details></div>
+
+<h2 class="sec">结果与图示</h2>
+
+<section class="widget" data-w="tabstat">
+<div class="w-head"><div class="t">例5 的描述性统计</div><div class="d">按书中相同的变量与统计量计算，可切换全样本、2001 年与分行业结果。</div></div>
+<div class="w-body">
+<div class="w-tabs">
+<button class="w-tab on" data-m="full">全样本</button>
+<button class="w-tab" data-m="y2001">仅 2001 年</button>
+<button class="w-tab" data-m="ind">分行业</button>
+</div>
+<div data-r="meta" class="res-note" style="margin-bottom:.5rem"></div>
+<div data-r="table"></div></div>
+</section><script type="application/json" id="wj-tabstat">{"vars":["公司投资","现金流","TobinQ","企业性质","公司规模","资产负债率"],"full":[{"v":"公司投资","mean":0.0543,"sd":0.0516,"p50":0.0385,"max":0.2511,"min":0.0003,"count":49804},{"v":"现金流","mean":0.6286,"sd":0.4312,"p50":0.5288,"max":2.5332,"min":0.064,"count":49859},{"v":"TobinQ","mean":1.9835,"sd":1.2998,"p50":1.5592,"max":8.7916,"min":0.8683,"count":49039},{"v":"企业性质","mean":0.4024,"sd":0.4904,"p50":0.0,"max":1.0,"min":0.0,"count":46074},{"v":"公司规模","mean":21.8974,"sd":1.2804,"p50":21.7289,"max":25.8897,"min":19.2381,"count":49890},{"v":"资产负债率","mean":0.4295,"sd":0.2114,"p50":0.421,"max":1.0048,"min":0.0521,"count":49806}],"y2001":[{"v":"公司投资","mean":0.0682,"sd":0.0658,"p50":0.0467,"max":0.2511,"min":0.0003,"count":924},{"v":"现金流","mean":0.5327,"sd":0.387,"p50":0.4345,"max":2.5332,"min":0.064,"count":925},{"v":"TobinQ","mean":1.7168,"sd":0.6021,"p50":1.5785,"max":8.7916,"min":1.0067,"count":923},{"v":"企业性质","mean":null,"sd":null,"p50":null,"max":null,"min":null,"count":0},{"v":"公司规模","mean":21.0274,"sd":0.8636,"p50":20.9667,"max":25.8897,"min":19.2381,"count":927},{"v":"资产负债率","mean":0.4361,"sd":0.183,"p50":0.426,"max":1.0048,"min":0.0521,"count":923}],"by_industry":[{"ind":"C39","n":4557,"inv_mean":0.0592,"inv_sd":0.0532,"cf_mean":0.6042,"cf_sd":0.3564},{"ind":"C26","n":3393,"inv_mean":0.0654,"inv_sd":0.0561,"cf_mean":0.6718,"cf_sd":0.3496},{"ind":"C27","n":3327,"inv_mean":0.0578,"inv_sd":0.0473,"cf_mean":0.5398,"cf_sd":0.3023},{"ind":"C38","n":3148,"inv_mean":0.0474,"inv_sd":0.0425,"cf_mean":0.6679,"cf_sd":0.3793},{"ind":"C35","n":2753,"inv_mean":0.045,"inv_sd":0.0415,"cf_mean":0.4877,"cf_sd":0.2496},{"ind":"I65","n":2612,"inv_mean":0.0372,"inv_sd":0.0422,"cf_mean":0.5123,"cf_sd":0.298},{"ind":"C36","n":1778,"inv_mean":0.0569,"inv_sd":0.045,"cf_mean":0.7167,"cf_sd":0.3735},{"ind":"C34","n":1762,"inv_mean":0.0441,"inv_sd":0.0411,"cf_mean":0.5429,"cf_sd":0.2558}],"meta":{"years":[2000,2022],"n_obs":50053,"n_firms":4855,"n_ind":76}}</script>
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>为什么论文都要报告描述性统计？</summary><div class="a">描述性统计表反映数据集的基本特征，是读者和审稿人判断数据质量的第一手材料：变量定义是否合理、极端值是否处理、样本量是否支持结论，都可以从这张表中看出。</div></details><details class="qa"><summary>tabstat 和 summarize 有什么区别？</summary><div class="a">summarize 输出固定的均值、标准差与极值，分位数需要加 detail 选项；tabstat 可以在 stats() 中自选统计量（如 p25、p75、iqr 等），支持 by() 分组，输出形式更接近论文表格。汇报描述性统计时一般使用 tabstat。</div></details><details class="qa"><summary>发现最大值明显异常怎么办？</summary><div class="a">先用 list 命令列出异常观测（例如 list if 变量 &gt; 某阈值），判断属于录入错误还是真实的极端值。录入错误应修正或删除；真实的极端值通过缩尾处理，即 2.2.4 节的 winsor2 命令。</div></details><details class="qa"><summary>by() 选项和 by 变量: 前缀有什么区别？</summary><div class="a">tabstat 的分组使用选项 by()；regress、summarize 等命令使用前缀 by 变量: 命令，并且要求先按该变量 sort。两种写法不能混用，否则报 invalid syntax 错误。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Grieser, W. &amp; Liu, Z.（2019）：</span><a class="rt" href="https://doi.org/10.1093/rfs/hhz021" target="_blank" rel="noopener">Corporate Investment and Innovation in the Presence of Competitor Constraints</a>，<span class="rv">The Review of Financial Studies</span></li></ul>
+<div class='pn'><a href="../2-2-4/index.html"><div class="dir">← 上一节</div><div class="t">2.2.4 面板数据处理</div></a><a class="next" href="../2-4/index.html"><div class="dir">下一节 →</div><div class="t">2.4 相关性分析</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{"b1":["清空已有数据。","设定工作路径。","导入主分析数据例5（约 5 万条公司-年度观测）。","汇报平均值、标准差、中位数、最大值、最小值和非缺失观测值数量。与 summarize 相比，tabstat 可以在 stats() 中自选统计量，输出形式也更接近论文表格。","仅限 2001 年的观测值：在命令后加 if 条件即可限定子样本。","按照公司所处行业分组汇报。需要注意 tabstat 的分组写法是选项 by()，而 regress、summarize 等命令的分组写法是 by 变量: 前缀，两种写法不能混用。","叠加上述两个功能：限定 2001 年并按行业分组汇报。变量、统计量与分组三个维度的组合，构成论文中描述性统计的全部常见形式。"]}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

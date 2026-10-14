@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>2.6.2 Heckman 与处理效应模型</title>
+<link rel="stylesheet" href="../../assets/style.css?v=f9c3a861">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <a class="home" href="../../index.html">首页</a><a class="home on" href="../../c/index.html">公司金融</a><a class="home" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<h1 class="doc"><span class="num-badge">2.6.2</span>Heckman 与处理效应模型</h1>
+
+<div class="card">
+<p style="font-size:.92rem">当样本是否被观测到、或个体是否接受处理并非随机时，直接 OLS 得到的估计有偏。本节演示两个经典命令：heckman 两阶段选择模型处理样本选择问题（womenwk 数据中只有工作者的工资可观测），treatreg 处理效应模型处理自选择问题（union3 数据中是否加入工会非随机）。两个命令结构相同：第一阶段建模选择行为，第二阶段在结果方程中修正选择偏误。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>样本选择偏误与自选择偏误的区别</li><li>heckman select() 的语法与排除性变量的作用</li><li>treatreg tr() 与 heckman 的对应关系</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">womenwk.dta</div><div class="fd">Stata 官方示例数据：2000 个观测，657 名未工作者的工资缺失（构成样本选择问题）</div><table class="vars"><tr><td>wage</td><td>工资（未工作 → 缺失，构成样本选择问题）</td><tr><td>educ / age</td><td>结果方程变量</td><tr><td>married / children</td><td>选择方程变量（影响是否工作，不直接影响工资）</td></table><a class="dl-btn" href="https://www.stata-press.com/data/r18/womenwk.dta" download target="_blank" rel="noopener">⬇ womenwk.dta（外部链接）</a></div><div class="data-card"><div class="fn">union3.dta</div><div class="fd">Stata 官方工会数据（webuse 在线读取）</div><table class="vars"><tr><td>wage</td><td>工资</td><tr><td>union</td><td>是否工会成员（处理变量，内生）</td><tr><td>south / black / tenure</td><td>处理方程的外生工具</td></table><a class="dl-btn" href="https://www.stata-press.com/data/r18/union3.dta" download target="_blank" rel="noopener">⬇ union3.dta（外部链接）</a></div>
+
+<h2 class="sec">代码</h2>
+<div class="block"><div class="block-h"><span class="bno">1</span>Heckman 两阶段选择模型<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b1" data-i="0" data-raw="webuse womenwk.dta, clear [直接从网页调取数据]"><span class="no">1</span><code><span class="k">webuse</span> womenwk.dta, <span class="k">clear</span> <span class="c">[直接从网页调取数据]</span></code></div><div class="ln has-note" data-b="b1" data-i="1" data-raw="sum"><span class="no">2</span><code><span class="k">sum</span></code></div><div class="ln has-note" data-b="b1" data-i="2" data-raw="heckman wage educ age, select(married children education age) twostep [使用Heckman两阶段选择模型，select参数中指定了选择方程 ，自变量为married、children、education和age]"><span class="no">3</span><code><span class="k">heckman</span> wage educ age, <span class="o">select</span>(married children education age) <span class="o">twostep</span> <span class="c">[使用Heckman两阶段选择模型，select参数中指定了选择方程 ，自变量为married、children、education和age]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">heckman 输出中重点看 lambda（逆米尔斯比率）的系数：显著说明选择方程与结果方程的误差相关，存在样本选择偏误，直接 OLS 有偏；不显著时可以直接使用 OLS。模型能够识别的关键在于选择方程中至少有一个不影响结果方程的排除性变量（本节为 married 与 children）；若两个方程的解释变量完全相同，模型只能依靠非线性函数形式识别，结论不可信。</div></details></div><div class="block"><div class="block-h"><span class="bno">2</span>处理效应模型 treatreg<span class="muted" style="margin-left:auto;font-weight:400">点击带"讲"标记的行查看逐行讲解</span></div><div class="code"><div class="ln has-note" data-b="b2" data-i="0" data-raw="webuse union3.dta, clear [直接从网页调取数据]"><span class="no">1</span><code><span class="k">webuse</span> union3.dta, <span class="k">clear</span> <span class="c">[直接从网页调取数据]</span></code></div><div class="ln has-note" data-b="b2" data-i="1" data-raw="sum"><span class="no">2</span><code><span class="k">sum</span></code></div><div class="ln has-note" data-b="b2" data-i="2" data-raw="treatreg wage age grade smsa black tenure, tr(union = south black tenure) twostep [以wage为因变量，指定处理变量为union，进行两阶段处理效应模型估计]"><span class="no">3</span><code><span class="k">treatreg</span> wage age grade smsa black tenure, <span class="o">tr</span>(union <span class="x">=</span> south black tenure) <span class="o">twostep</span> <span class="c">[以wage为因变量，指定处理变量为union，进行两阶段处理效应模型估计]</span></code></div></div><details class="deep"><summary>深度解读</summary><div class="body">heckman 与 treatreg 处理的选择问题不同：heckman 针对结果变量缺失的样本选择（未工作者观测不到工资）；treatreg 针对处理状态的自选择（是否入会可以观测，但入会行为非随机）。两者在 Stata 中后来统一为 etregress 等命令族。输出中同样关注两个方程误差的相关系数是否显著。</div></details></div>
+
+
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>Heckman 模型和 PSM 分别适用于什么情形？</summary><div class="a">Heckman 针对不可观测的选择机制，需要为选择方程寻找排除性变量；PSM 针对可观测协变量的失衡，用倾向得分构造可比样本。结果变量缺失（如未工作者的工资）时使用 Heckman；处理组与对照组都可观测、担心可观测特征不可比时使用 PSM。</div></details><details class="qa"><summary>没有合适的排除性变量怎么办？</summary><div class="a">这是 Heckman 模型最常见的质疑。没有排除性变量时，模型仅依靠函数形式识别，结果不稳健。可以考虑 PSM、双重差分等其他方法，或对选择行为做敏感性分析。</div></details><details class="qa"><summary>逆米尔斯比率显著说明什么？</summary><div class="a">lambda（逆米尔斯比率）的系数显著，说明选择方程与结果方程的误差相关，即存在样本选择偏误，直接 OLS 的估计有偏，修正有必要；不显著时 Heckman 估计退化为 OLS。</div></details><details class="qa"><summary>webuse 读取数据失败怎么办？</summary><div class="a">webuse 从 Stata 官方网站读取数据，网络受限或 Stata 版本变化时可能失败（错误代码常为 r(601)）。可以手动从 www.stata-press.com/data 下载对应的 dta 文件，再 use 本地路径读取。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Heckman, J. J.（1979）：</span><a class="rt" href="https://doi.org/10.2307/1912352" target="_blank" rel="noopener">Sample Selection Bias as a Specification Error</a>，<span class="rv">Econometrica</span></li></ul>
+<div class='pn'><a href="../2-6-1/index.html"><div class="dir">← 上一节</div><div class="t">2.6.1 工具变量与两阶段最小二乘（2SLS）</div></a><a class="next" href="../2-6-3/index.html"><div class="dir">下一节 →</div><div class="t">2.6.3 倾向得分匹配（PSM）</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{"b1":["直接从网页调取数据。webuse 从 Stata 官方示例库读取数据。","对数据进行描述性统计。注意 wage 的非缺失观测数小于样本量，缺失的正是未工作的女性，这构成了样本选择问题。","使用 Heckman 两阶段选择模型。主方程中工资由 educ、age 解释；select() 中指定选择方程（是否工作），自变量为 married、children、education 和 age；twostep 表示两步法估计（默认为极大似然估计）。married 与 children 影响是否工作，但不直接影响工资，是该模型得以识别的排除性变量。"],"b2":["直接从网页调取数据 union3。","对数据进行描述性统计。","以 wage 为因变量，tr() 中指定处理变量为 union（是否工会成员），等号后的 south、black、tenure 为处理方程的外生工具变量，twostep 为两步法估计。treatreg 与 heckman 结构相同：第一阶段建模处理或选择行为，第二阶段估计结果方程。"]}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

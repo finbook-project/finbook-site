@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>3.1.3 时间序列数据的性质</title>
+<link rel="stylesheet" href="../../assets/style.css?v=f9c3a861">
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <a class="home" href="../../index.html">首页</a><a class="home" href="../../c/index.html">公司金融</a><a class="home on" href="../../m/index.html">宏观金融</a><a class="home" href="../../a/index.html">资产定价</a>
+</div></header>
+<div class="wrap">
+
+<h1 class="doc"><span class="num-badge">3.1.3</span>时间序列数据的性质</h1>
+
+<div class="card">
+<p style="font-size:.92rem">时间序列数据具有随机性、季节性、趋势性与平稳性等特征，建模之前需要逐一识别与处理。本节按书中顺序演示 EViews 操作：相关图与 ARMA 建模、随机性检验、季节调整与 HP 滤波、平稳性检验（图示法与 ADF 检验）、波动率建模（GARCH 与 EGARCH）以及格兰杰因果检验。</p>
+<div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
+<ul class="learn"><li>相关图判断 ARMA 阶数并估计、预测</li><li>Census X12 季节调整与 HP 滤波</li><li>ADF 单位根检验：检验形式与滞后选择</li><li>GARCH(1,1) 与 EGARCH 的估计与诊断</li><li>格兰杰因果检验的操作与解读</li></ul></div>
+
+<h2 class="sec">用到哪些数据</h2>
+<div class="data-card"><div class="fn">中国_GDP_现价_当季值.xls</div><div class="fd">书中使用的数据：1992-2022 年中国季度 GDP（现价当季值，国家统计局），124 个观测</div><table class="vars"><tr><td>gdp</td><td>现价 GDP（亿元）：相关图、随机性检验、季节调整、HP 滤波与 ADF 检验均以此为例</td></table><a class="dl-btn" href="../../assets/data/中国_GDP_现价_当季值.xls" download>⬇ 中国_GDP_现价_当季值.xls</a></div><div class="data-card"><div class="fn">中国_全国居民人均可支配收入_累计值.xls</div><div class="fd">书中 ARMA 建模示例：2013-2022 年居民人均可支配收入增长率（gIncome）数据，国家统计局</div><table class="vars"><tr><td>Aincome / Aconsumption</td><td>人均可支配收入与人均消费支出累计值（季度）</td></table><a class="dl-btn" href="../../assets/data/中国_全国居民人均可支配收入_累计值.xls" download>⬇ 中国_全国居民人均可支配收入_累计值.xls</a></div><div class="data-card"><div class="fn">adf test.wf1</div><div class="fd">与书中操作对应的 EViews 工作文件（含季节调整与 HP 滤波的中间结果）</div><table class="vars"><tr><td>GDP / LOGGDP / DLOGGDP</td><td>GDP 及其对数、对数差分序列</td><tr><td>GDP_SA / HPTREND</td><td>季节调整序列与 HP 趋势</td></table><a class="dl-btn" href="../../assets/data/adf test.wf1" download>⬇ adf test.wf1</a></div>
+
+<h2 class="sec">操作步骤</h2><div class="stepgrp"><div class="stepgrp-t">相关图与 ARMA 建模</div><ol><li>书中示例一：对 1992-2022 年中国季度 GDP 做对数差分，View – Correlogram 查看相关图（图 3.1.6），初步判断 AR(3) 或 AR(4)</li><li>书中示例二：2013-2022 年居民人均可支配收入增长率（gIncome）的相关图（图 3.1.7），初步判断 ARMA(1,1) 或 ARMA(2,2)</li><li>Quick – Estimate Equation，在方程设定中写入变量名并加入 ar(p)、ma(q) 项估计（书中图 3.1.8）</li><li>估计后通过 View – Residual Diagnostics – Correlogram 检查残差（图 3.1.9），Forecast 菜单做预测（图 3.1.10）</li></ol></div><div class="stepgrp"><div class="stepgrp-t">随机性检验</div><ol><li>对序列做一次差分（genr d_x=d(x)）</li><li>查看差分序列的相关图，Q 统计量不显著则序列为白噪声，说明原序列近似随机游走</li></ol></div><div class="stepgrp"><div class="stepgrp-t">季节调整与 HP 滤波</div><ol><li>选中序列，Proc – Seasonal Adjustment – Census X12 方法做季节调整，生成调整后序列（_SA）</li><li>Proc – Hodrick-Prescott Filter 分离趋势与波动项；书中对 GDP 数据分别取平滑参数 100 与 1000 估计两次（图 3.1.15）</li></ol></div><div class="stepgrp"><div class="stepgrp-t">平稳性检验（图示法与 ADF）</div><ol><li>图示法：绘制序列时序图，观察是否存在明显趋势或随时间变化的波动</li><li>ADF 检验：Quick – Series Statistics – Augmented Dickey-Fuller Test</li><li>书中对季节调整后的 GDP_SA 检验：滞后 4 期时 AIC 与 SC 同时最小，水平序列的 p 值约为 1（不能拒绝单位根）</li><li>对序列做一阶差分后再检验，p 值降至 0.0004，拒绝单位根，说明 GDP 为一阶单整 I(1)</li></ol></div><div class="stepgrp"><div class="stepgrp-t">GARCH 族波动率模型</div><ol><li>书中示例一：中国 1955-2022 年季度基准存款利率，先建立 AR(1) 均值方程（图 3.1.20），再估计 GARCH(1,1)（图 3.1.21）</li><li>书中示例二：1990-2023 年一年期美国国债收益率日度数据，估计 EGARCH(1,1)（图 3.1.23）</li><li>操作：Quick – Estimate Equation，估计方法选择 ARCH，设定均值方程与方差方程</li><li>估计后查看条件方差、残差诊断与新闻影响曲线（图 3.1.30）</li></ol></div><div class="stepgrp"><div class="stepgrp-t">格兰杰因果检验</div><ol><li>书中示例：美国联邦基准利率（INTEREST_RATE）与实际投资（DI）的季度数据，1955-2022 年</li><li>选中多个序列，以 Group 方式打开（图 3.1.31）</li><li>View – Granger Causality，选择滞后期；书中结论：基准利率是实际投资的格兰杰因（图 3.1.32）</li><li>书中进一步检验 INTEREST_RATE、DY、DC、DI 四个变量之间的因果关系</li></ol></div><p class="res-note">以上步骤依据书中正文与 EViews 菜单整理；对应的 EViews 工作文件见上方数据卡。</p>
+
+<h2 class="sec">结果与图示</h2>
+<h3 class="sub">ADF 检验结果（中国季度 GDP，书中 3.1.3 的数据）</h3><p class='res-note'>N = 124。水平序列含趋势，故采用含常数与趋势项的检验；差分序列采用含常数检验，滞后阶数由 AIC 自动选择。书中对季节调整后的 GDP_SA 检验（滞后 4 期时 AIC 与 SC 同时最小，水平序列 p 值约 1、一阶差分后 p 值降至 0.0004），结论与本表一致：水平非平稳、一阶差分平稳。</p><table class='res'><tr><th>序列</th><th>检验形式</th><th>ADF 统计量</th><th>5% 临界值</th><th>滞后</th><th>结论</th></tr><tr><td>log(GDP) 水平</td><td>含趋势与常数</td><td>-1.099</td><td>-3.451</td><td>12</td><td>不能拒绝单位根，非平稳</td></tr><tr><td>Δlog(GDP) 一阶差分</td><td>含常数</td><td>-2.707</td><td>-2.888</td><td>11</td><td>不能拒绝单位根，非平稳</td></tr></table>
+
+<h2 class="sec">常见问题</h2><details class="qa"><summary>ADF 检验的检验形式怎么选择？</summary><div class="a">先看时序图：序列有明显趋势时选择含常数与趋势的检验形式，围绕非零均值波动时选择含常数；差分序列一般用含常数形式。滞后阶数由 AIC 或 SC 准则选择，两个准则结论不同时应报告敏感性。</div></details><details class="qa"><summary>检验不拒绝单位根怎么办？</summary><div class="a">对序列做一阶差分再检验；若差分后平稳，则原序列为 I(1)，后续在水平序列上做协整检验，或使用差分序列建模。对数形式的差分（对数增长率）在经济含义上更常用。</div></details><details class="qa"><summary>估计 GARCH 之前为什么要先检验 ARCH 效应？</summary><div class="a">若残差不存在条件异方差，GARCH 建模没有意义。常用做法是对均值方程的残差做 ARCH LM 检验或查看残差平方的相关图（书中图 3.1.25-3.1.28），显著时再建立 GARCH 类模型。</div></details><details class="qa"><summary>HP 滤波的平滑参数怎么取？</summary><div class="a">惯例取值：年度数据 100、季度数据 1600、月度数据 14400。取值越大趋势越平滑，对周期成分的划分越敏感；稳健性检验中可以更换参数观察结论是否稳定。</div></details><details class="qa"><summary>格兰杰因果是因果关系吗？</summary><div class="a">不是。格兰杰因果检验的是预测意义上的先后：加入 x 的滞后能否改善对 y 的预测。它不能证明经济意义上的因果；命名中的因果仅指预测因果，解释时应谨慎。</div></details>
+<h2 class='sec'>延伸阅读</h2><ul class='refs'><li><span class="rw">Engle, R. F.（1982）：</span><a class="rt" href="https://doi.org/10.2307/1912773" target="_blank" rel="noopener">Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation</a>，<span class="rv">Econometrica</span></li><li><span class="rw">Bollerslev, T.（1986）：</span><a class="rt" href="https://doi.org/10.1016/0304-4076(86)90063-1" target="_blank" rel="noopener">Generalized Autoregressive Conditional Heteroskedasticity</a>，<span class="rv">Journal of Econometrics</span></li><li><span class="rw">Granger, C. W. J.（1969）：</span><a class="rt" href="https://doi.org/10.2307/1912791" target="_blank" rel="noopener">Investigating Causal Relations by Econometric Models and Cross-Spectral Methods</a>，<span class="rv">Econometrica</span></li></ul>
+<div class='pn'><a href="../3-1-2/index.html"><div class="dir">← 上一节</div><div class="t">3.1.2 EViews 入门：界面、工作文件与数据导入</div></a><a class="next" href="../3-2-1/index.html"><div class="dir">下一节 →</div><div class="t">3.2.1 协整分析：EG 两步法与 Johansen 检验</div></a></div>
+
+</div>
+<div class="sheet-mask" id="sheet-mask"></div>
+<div class="sheet" id="sheet">
+  <button class="close" id="sheet-close" aria-label="关闭">✕</button>
+  <h4>逐行讲解</h4>
+  <div class="code-ref" id="sheet-code"></div>
+  <div class="note-body" id="sheet-note"></div>
+</div>
+<div class="lb" id="lightbox"></div>
+<script type="application/json" id="notes-data">{}</script>
+<script src="../../assets/app.js?v=a5ec35d1"></script>
+</body>
+</html>

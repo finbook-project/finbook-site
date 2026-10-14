@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>样式版本选择</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.vgrid {{ display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 1.2rem; }}
+@media (min-width: 780px) {{ .vgrid {{ grid-template-columns: repeat(2, 1fr); }} }}
+.vcard {{ display: block; background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+  padding: 1.15rem 1.2rem; color: var(--ink); }}
+.vcard:hover {{ border-color: var(--navy); text-decoration: none; }}
+.vcard .tag {{ display: inline-block; font-family: var(--mono); font-size: .78rem; background: var(--navy);
+  color: #fff; border-radius: 4px; padding: .1rem .5rem; margin-bottom: .45rem; }}
+.vcard .t {{ font-weight: 700; font-size: 1.02rem; }}
+.vcard .d {{ color: var(--ink-2); font-size: .85rem; margin-top: .25rem; }}
+.sw {{ display: flex; gap: .35rem; margin-top: .6rem; }}
+.sw i {{ width: 22px; height: 22px; border-radius: 5px; border: 1px solid var(--line); display: block; }}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="in">
+  <span class="brand">《金融学实证论文写作》配套资源</span>
+  <a class="home" href="index.html">返回主站</a>
+</div></header>
+<div class="wrap">
+<span class="kicker" style="display:none"></span>
+<h1 class="doc">样式版本选择</h1>
+<p class="tagline">同一个网站的四种界面风格，内容完全相同。点开任意版本即可完整浏览（含交互演示），选出您觉得最合适的一种，把版本字母告诉我们就行。预览站点不含数据下载。</p>
+<div class="vgrid">
+  <a class="vcard" href="index.html">
+    <span class="tag">A</span>
+    <div class="t">版本 A 现行风格</div>
+    <div class="d">纸白暖底、墨蓝主色、卡片轻圆角，当前线上使用的样式</div>
+    <div class="sw"><i style="background:#f6f3ec"></i><i style="background:#1f3a5f"></i><i style="background:#b23b2e"></i></div>
+  </a>
+  <a class="vcard" href="v2/index.html">
+    <span class="tag">B</span>
+    <div class="t">版本 B 书卷期刊风</div>
+    <div class="d">米白纸底、衬线标题、细双线分隔，纸质教辅的书卷气</div>
+    <div class="sw"><i style="background:#f7f3e9"></i><i style="background:#453b2a"></i><i style="background:#a13c2e"></i></div>
+  </a>
+  <a class="vcard" href="v3/index.html">
+    <span class="tag">C</span>
+    <div class="t">版本 C 冷白极简风</div>
+    <div class="d">纯白底、单一蓝色强调、扁平细边框，现代在线文档风</div>
+    <div class="sw"><i style="background:#ffffff"></i><i style="background:#0969da"></i><i style="background:#d8dee4"></i></div>
+  </a>
+  <a class="vcard" href="v4/index.html">
+    <span class="tag">D</span>
+    <div class="t">版本 D 灰蓝柔和风</div>
+    <div class="d">浅灰蓝底、白卡片大圆角、柔和阴影，观感更圆润</div>
+    <div class="sw"><i style="background:#edf1f7"></i><i style="background:#33528e"></i><i style="background:#ffffff"></i></div>
+  </a>
+</div>
+</div>
+</body>
+</html>
