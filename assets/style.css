@@ -83,7 +83,6 @@ h3.sub {
 .chap-card .d { color: var(--ink-2); font-size: .85rem; margin-top: .25rem; }
 .chap-card .d ul.toc { list-style: none; margin: .5rem 0 0; padding: 0; font-size: .82rem; }
 .chap-card .d ul.toc li { margin: .22rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chap-card .d ul.toc li::before { content: "· "; color: var(--ink-3); }
 .chap-card .stats { display: flex; gap: 1.4rem; margin-top: .8rem; font-size: .78rem; color: var(--ink-3); }
 .chap-card .stats b { color: var(--navy); font-size: .95rem; }
 .chap-card .stats span { white-space: nowrap; }
