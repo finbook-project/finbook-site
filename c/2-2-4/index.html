@@ -16,7 +16,7 @@
 
 <h1 class="doc"><span class="num-badge">2.2.4</span>面板数据处理</h1>
 
-<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<div class="card">
 <p style="font-size:.92rem">公司金融实证研究绝大部分使用面板数据。面板数据的处理可以归纳为六个步骤：第一步是收集数据；第二步是转换成面板数据（若从 Wind 收集数据）；第三步是缩尾处理；第四步是描述性统计分析；第五步是相关性分析；第六步是回归分析。本节代码演示前两步及缩尾处理：从 Excel 导入数据、宽表转换为长表、设定面板结构，并用 winsor2 进行缩尾。</p>
 <div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
 <ul class="learn"><li>import excel 导入 Excel 数据并把首行识别为变量名</li><li>reshape long 将宽表转换为长表</li><li>tsset / xtset 设定面板结构</li><li>winsor2 进行双侧 1% 缩尾，并对比处理前后的结果</li></ul></div>

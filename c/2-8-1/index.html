@@ -16,7 +16,7 @@
 
 <h1 class="doc"><span class="num-badge">2.8.1</span>安慰剂检验</h1>
 
-<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<div class="card">
 <p style="font-size:.92rem">安慰剂检验构造一个不应产生效应的伪政策：把政策发生时间提前（时间安慰剂检验），或从样本中随机抽取个体作为伪处理组（空间安慰剂检验）。若伪政策仍然显著，说明原效应可能来自趋势巧合或其他因素。本节沿用 Beck 等（2010）的数据：先复跑基准双重差分回归并用 estimates store 储存，再用 didplacebo 完成两类检验。</p>
 <div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
 <ul class="learn"><li>时间安慰剂检验：政策提前 1-10 期，伪效应应不显著</li><li>空间安慰剂检验：随机抽取伪处理州，真实效应应大于伪效应分布</li><li>estimates store 与后续检验命令的衔接</li></ul></div>

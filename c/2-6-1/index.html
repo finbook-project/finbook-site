@@ -16,7 +16,7 @@
 
 <h1 class="doc"><span class="num-badge">2.6.1</span>工具变量与两阶段最小二乘（2SLS）</h1>
 
-<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<div class="card">
 <p style="font-size:.92rem">当不可观测的遗漏变量（如个人能力）导致解释变量与误差项相关时，OLS 不再一致。工具变量法寻找一个与内生解释变量相关、又不通过其他渠道影响被解释变量的外生变量来恢复一致的估计。本节以 Griliches（1976）工资方程为案例：iq 与能力高度相关、本身内生，以母亲受教育年限 med 和工作知识测验成绩 kww 作为工具变量，比较 OLS、代理变量法与 2SLS 的结果，并用手工两阶段展示估计结构。</p>
 <div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
 <ul class="learn"><li>工具变量的两个条件：相关性与排除性约束</li><li>ivreg2 的语法：(内生变量 = 工具变量)，endog() 内生性检验</li><li>手工两阶段回归的构造及其标准误问题</li></ul></div>

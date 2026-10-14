@@ -16,7 +16,7 @@
 
 <h1 class="doc"><span class="num-badge">2.6.2</span>Heckman 与处理效应模型</h1>
 
-<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<div class="card">
 <p style="font-size:.92rem">当样本是否被观测到、或个体是否接受处理并非随机时，直接 OLS 得到的估计有偏。本节演示两个经典命令：heckman 两阶段选择模型处理样本选择问题（womenwk 数据中只有工作者的工资可观测），treatreg 处理效应模型处理自选择问题（union3 数据中是否加入工会非随机）。两个命令结构相同：第一阶段建模选择行为，第二阶段在结果方程中修正选择偏误。</p>
 <div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
 <ul class="learn"><li>样本选择偏误与自选择偏误的区别</li><li>heckman select() 的语法与排除性变量的作用</li><li>treatreg tr() 与 heckman 的对应关系</li></ul></div>

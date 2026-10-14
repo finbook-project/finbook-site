@@ -16,7 +16,7 @@
 
 <h1 class="doc"><span class="num-badge">2.8.2</span>似不相关回归（SUR）</h1>
 
-<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<div class="card">
 <p style="font-size:.92rem">当几个方程的被解释变量来自同一批个体（如同一学生的数学成绩与阅读成绩）时，各方程的误差项往往同期相关。此时逐个方程 OLS 无偏但不是最有效率的估计；似不相关回归（SUR）利用误差协方差矩阵做广义最小二乘，联合估计整个方程组。本节用数学与阅读成绩的两方程案例演示 sureg 的用法。</p>
 <div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
 <ul class="learn"><li>SUR 的适用条件：同期误差相关与各方程解释变量不同</li><li>sureg (方程1) (方程2) 的语法</li><li>SUR 与逐方程 OLS 的系数差异来源</li></ul></div>

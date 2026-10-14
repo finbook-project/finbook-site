@@ -16,7 +16,7 @@
 
 <h1 class="doc"><span class="num-badge">2.7</span>动态面板与 GMM 估计</h1>
 
-<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<div class="card">
 <p style="font-size:.92rem">当解释变量中包含被解释变量的滞后项时（企业的当期行为往往受过去行为影响），模型为动态面板。此时 OLS 与固定效应估计均存在偏误（Nickell 偏差）。Arellano-Bond 差分 GMM 的做法是：先一阶差分消除个体固定效应，再用更深期的滞后项作为工具变量。本节用 Stata 官方的 abdata 就业面板复现 Arellano 和 Bond（1991）的经典动态就业方程。</p>
 <div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
 <ul class="learn"><li>动态面板需要 GMM 的原因：Nickell 偏差</li><li>xtabond2 的语法：gmm() 型工具、iv() 型工具、nolevel 即差分 GMM</li><li>结果表的阅读：AR(2) 检验与 Hansen 过度识别检验</li></ul></div>

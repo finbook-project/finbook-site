@@ -16,7 +16,7 @@
 
 <h1 class="doc"><span class="num-badge">4.3.3</span>机器学习定价：数据预处理（Python）</h1>
 
-<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<div class="card">
 <p style="font-size:.92rem">机器学习方法用大量公司特征预测下期收益。本节按书中代码完成数据预处理：导入收益率与特征数据（Gu、Kelly 和 Xiu 2020 的公开数据：1957-2020 年美股月度收益与 94 个股票特征），把特征滞后一期（用 t-1 期特征预测 t 期收益）、按月份合并，再以 7:3 划分训练集与测试集并做标准化。</p>
 <div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
 <ul class="learn"><li>pd.read_csv 导入并预览数据</li><li>月份字符串的后移与数据合并（t-1 特征对 t 收益）</li><li>train_test_split 划分与 StandardScaler 标准化</li></ul></div>

@@ -16,7 +16,7 @@
 
 <h1 class="doc"><span class="num-badge">2.8.3</span>断点回归（RDD）</h1>
 
-<div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
+<div class="card">
 <p style="font-size:.92rem">当样本是否接受处理完全由某个连续变量是否越过断点决定时（得票率过线即执政），断点附近的个体如同被随机分组，比较两侧的结局即可识别局部因果效应。本节以 Lee（2008）参议院选举数据为例：margin 为民主党上一期得票领先幅度（断点为 0），vote 为下一期得票率；rdplot 先绘图观察断点，rdrobust 在给定带宽下估计效应，rdbwselect 汇报最优带宽。</p>
 <div class="muted" style="margin:.5rem 0 .1rem">本节内容包括：</div>
 <ul class="learn"><li>断点回归的识别逻辑与精确、模糊两种类型</li><li>rdplot 断点图的绘制：断点 c(0)、多项式阶数 p(3)、分箱 binselect(es)</li><li>带宽的作用与 rdrobust h()、rdbwselect 的用法</li></ul></div>
