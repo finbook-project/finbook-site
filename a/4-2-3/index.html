@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>4.2.3 多因子模型检验：Fama-MacBeth 回归 · 《金融学实证论文写作》配套资源</title>
-<link rel="stylesheet" href="../../assets/style.css?v=de84c522">
+<link rel="stylesheet" href="../../assets/style.css?v=3cb9e3bc">
 </head>
 <body>
 <header class="topbar"><div class="in">
@@ -14,9 +14,7 @@
 </div></header>
 <div class="wrap">
 
-<span class="kicker">第 4 章 · 资产定价实证研究方法 · 模块 2/7</span>
 <h1 class="doc"><span class="num-badge">4.2.3</span>多因子模型检验：Fama-MacBeth 回归</h1>
-<p class="tagline">两阶段检验：滚动窗口估计因子暴露 + 逐月截面回归取均值</p>
 
 <div class="card"><h2 class="sec" style="margin-top:.2rem">这一节做什么</h2>
 <p style="font-size:.92rem">多因子模型的检验有两条路线：以组合排序为基础的时间序列回归（Gibbons 检验），与 Fama 和 MacBeth（1973）的两阶段截面回归。本节演示后者的 Stata 实现：第一步用 asreg 的滚动窗口对每只股票估计因子暴露（beta），第二步把滞后一期的 beta 作为解释变量做逐月截面回归（asreg fmb 或 xtfmb），并对系数均值做 Newey-West 调整。</p>
