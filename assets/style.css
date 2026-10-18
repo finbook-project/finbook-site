@@ -94,7 +94,6 @@ h3.sub {
   transition: border-color .12s;
 }
 .ppt-card:hover { border-color: var(--navy); text-decoration: none; }
-.ppt-card img { width: 64px; height: 64px; flex: none; border: 1px solid var(--line); border-radius: 4px; background: #fff; }
 .ppt-card .t { font-weight: 600; font-size: .9rem; }
 .ppt-card .d { color: var(--ink-2); font-size: .78rem; margin-top: .2rem; }
 
